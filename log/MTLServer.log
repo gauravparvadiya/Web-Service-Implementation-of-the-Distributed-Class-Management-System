@@ -1,0 +1,6 @@
+INFO    2017-07-20 22:20:59,069 [pool-1-thread-1] com.server.CenterServerMTL  - MTL0001| createTRecord method | Teacher information - [{a, a, a, 4399247741, q, a}]
+INFO    2017-07-20 22:20:59,075 [pool-1-thread-1] com.server.CenterServerMTL  - MTL0001| Teacher created successfully with id MTR10005
+INFO    2017-07-20 22:34:06,019 [pool-1-thread-1] com.server.CenterServerMTL  - MTL0001| createTRecord method | Teacher information - [{a, a, a, 1234567890, a, a}]
+INFO    2017-07-20 22:34:06,021 [pool-1-thread-1] com.server.CenterServerMTL  - MTL0001| Teacher created successfully with id MTR10001
+INFO    2017-07-20 22:34:40,099 [pool-1-thread-1] com.server.CenterServerMTL  - MTL0002| createTRecord method | Teacher information - [{a, a, a, 1234567898, qweqwe, qweqw}]
+INFO    2017-07-20 22:34:40,105 [pool-1-thread-1] com.server.CenterServerMTL  - MTL0002| Teacher created successfully with id MTR10002

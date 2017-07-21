@@ -1,0 +1,8 @@
+DEBUG   2017-07-20 22:21:28,817 [main] com.server.ManagerClient  - connected to manager client.
+DEBUG   2017-07-20 22:22:19,439 [main] com.server.ManagerClient  - connected to manager client.
+DEBUG   2017-07-20 22:26:24,345 [main] com.server.ManagerClient  - connected to manager client.
+DEBUG   2017-07-20 22:34:15,181 [main] com.server.ManagerClient  - connected to manager client.
+INFO    2017-07-20 22:34:27,670 [main] com.server.ManagerClient  - Starting to create teacher.
+INFO    2017-07-20 22:34:40,096 [main] com.server.ManagerClient  - Using createTRecord method.
+INFO    2017-07-20 22:34:40,107 [main] com.server.ManagerClient  - Teacher record created successfully.
+DEBUG   2017-07-20 22:38:02,028 [main] com.server.ManagerClient  - connected to manager client.
