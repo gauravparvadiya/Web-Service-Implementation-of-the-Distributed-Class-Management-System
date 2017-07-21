@@ -95,7 +95,7 @@ public class ManagerClient implements Runnable {
 		if (managerID.substring(0, 3).equals("MTL")) {
 			if (centerImplMTL.createTRecord(managerID, fn, ln, address, ph, spec, loc)) {
 				System.out.println("Record created successfully. ");
-				logger.info("Teacher record created successfully.");
+				logger.info("Teacher record created successfully.");;
 			} else {
 				System.out.println("Something went wrong!!! ");
 				logger.error("Server returns error creating teacher record.");
