@@ -53,6 +53,6 @@ public interface Center {
 	 */
 	public Boolean editRecord(String recordID, String fieldName, String newValue, String managerID);
 
-	public String transferRecord(String managerID, String recordID, String remoteCenterServerName);
+	public String transferRecord(String managerID, String recordI);
 
 }

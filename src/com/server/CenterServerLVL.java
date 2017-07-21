@@ -1,18 +1,10 @@
 package com.server;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.io.Reader;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Matcher;
@@ -33,7 +25,7 @@ import com.users.Teacher;
 
 @WebService(endpointInterface = "com.server.Center")
 @SOAPBinding(style = Style.RPC)
-class CenterServerLVL implements Center {
+public class CenterServerLVL implements Center {
 
 	public static HashMap<String, ArrayList<Object>> srtrRecords;
 	public ArrayList<Object> srtrLVL, a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z;
@@ -77,6 +69,8 @@ class CenterServerLVL implements Center {
 
 		helper = new LogHelper();
 		helper.setupLogFile("log/LVLServer.log");
+		System.out.println("LVL Called");
+		addDefaultRecords();
 	}
 
 	/**
@@ -92,6 +86,8 @@ class CenterServerLVL implements Center {
 			JsonParser parser = new JsonParser();
 			JsonArray array = parser.parse(reader).getAsJsonArray();
 
+			System.out.println("Laval default record called");
+			
 			if (array != null) {
 				for (int i = 4; i < 7; i++) {
 					JsonObject object = (JsonObject) array.get(i);
@@ -274,8 +270,8 @@ class CenterServerLVL implements Center {
 		int id = Integer.parseInt(lastSRecordId.substring(3, 8));
 		lastSRecordId = "LSR" + "" + ++id;
 		Student s = new Student(fname, lastName, courseRegistered, status, statusDate, lastSRecordId);
-		logger.info(managerID + "| createSRecord method | Student information - [{" + fname + ", " + lastName + ", "
-				+ courseRegistered + ", " + status + ", " + statusDate + "}]");
+		logger.info(managerID + "| createSRecord method | Student information - [{" + fname + ", " + lastName + ",[ "
+				+ courseRegistered + "], " + status + ", " + statusDate + "}]");
 		addToMap(s);
 		logger.info(managerID + "| Student created successfully with id " + lastSRecordId);
 		return true;
@@ -283,6 +279,7 @@ class CenterServerLVL implements Center {
 
 	@Override
 	public String getRecordCounts(String managerID) {
+		System.out.println("LVL count Called");
 		logger.info(managerID + "| Using getRecordCounts method.");
 		int counter = 0;
 		if (srtrRecords.size() > 0) {
@@ -402,94 +399,31 @@ class CenterServerLVL implements Center {
 	}
 
 	@Override
-	public String transferRecord(String managerID, String recordID, String remoteCenterServerName) {
+	public String transferRecord(String managerID, String recordID) {
 		if (recordID.substring(0, 3).equals("LSR")) {
 			Student s;
+			String o = new String();
+			o = null;
 			for (int i = 65; i < 91; i++) {
 				String key = Character.toString((char) i);
 				ArrayList<Object> array = srtrRecords.get(key);
+				System.out.println("Hello " + array.size());
 				for (int j = 0; j < array.size(); j++) {
 					if (array.get(j) instanceof Student) {
 						s = (Student) array.get(j);
 						if (s.getId().equals(recordID)) {
-
-							if (remoteCenterServerName.equals("DDO")) {
-								logger.info(managerID + "| Using transferRecord method.");
-								DatagramSocket socket = null;
-								String responseMsg = new String();
-								try {
-									logger.info(managerID
-											+ "| Creating UDP connection with DDO server to transfer record.");
-									socket = new DatagramSocket();
-									ByteArrayOutputStream out = new ByteArrayOutputStream();
-									ObjectOutputStream os = new ObjectOutputStream(out);
-									os.writeObject(s);
-									byte[] message = out.toByteArray();
-									InetAddress host = InetAddress.getByName("localhost");
-									DatagramPacket request = new DatagramPacket(message, message.length, host, 1112);
-									socket.send(request);
-									logger.info(managerID + "| Sent request to DDO server - localhost:1112");
-									byte[] buffer = new byte[10];
-									DatagramPacket reply = new DatagramPacket(buffer, buffer.length);
-									socket.receive(reply);
-									logger.info(managerID + "| Reply from DDO server : " + new String(reply.getData()));
-									responseMsg = new String(reply.getData());
-									socket.close();
-									logger.info(managerID + "| Connection closed with DDO server.");
-								} catch (SocketException e) {
-									logger.error(managerID + "| Error in socket connection | " + e.toString());
-									e.printStackTrace();
-								} catch (UnknownHostException e) {
-									logger.error(managerID + "| Unknownhost exception | " + e.toString());
-									e.printStackTrace();
-								} catch (IOException e) {
-									logger.error(managerID + "| IO exception | " + e.toString());
-									e.printStackTrace();
-								}
-								array.remove(j);
-								return responseMsg;
-							} else if (remoteCenterServerName.equals("MTL")) {
-								logger.info(managerID + "| Using transferRecord method.");
-								DatagramSocket socket = null;
-								String responseMsg = new String();
-								try {
-									logger.info(managerID
-											+ "| Creating UDP connection with MTL server to transfer record.");
-									socket = new DatagramSocket();
-									ByteArrayOutputStream out = new ByteArrayOutputStream();
-									ObjectOutputStream os = new ObjectOutputStream(out);
-									os.writeObject(s);
-									byte[] message = out.toByteArray();
-									InetAddress host = InetAddress.getByName("localhost");
-									DatagramPacket request = new DatagramPacket(message, message.length, host, 2965);
-									socket.send(request);
-									logger.info(managerID + "| Sent request to MTL server - localhost:2965");
-									byte[] buffer = new byte[10];
-									DatagramPacket reply = new DatagramPacket(buffer, buffer.length);
-									socket.receive(reply);
-									logger.info(managerID + "| Reply from MTL server : " + new String(reply.getData()));
-									responseMsg = new String(reply.getData());
-									socket.close();
-									logger.info(managerID + "| Connection closed with MTL server.");
-								} catch (SocketException e) {
-									logger.error(managerID + "| Error in socket connection | " + e.toString());
-									e.printStackTrace();
-								} catch (UnknownHostException e) {
-									logger.error(managerID + "| Unknownhost exception | " + e.toString());
-									e.printStackTrace();
-								} catch (IOException e) {
-									logger.error(managerID + "| IO exception | " + e.toString());
-									e.printStackTrace();
-								}
-								array.remove(j);
-								return responseMsg;
-							}
+							o = s.getFname() + ":" + s.getLname() + ":" + s.getCoursesRegistered() + ":" + s.getStatus() + ":" + s.getStatusDueDate();
+							System.out.println(o);
+							array.remove(j);
+							System.out.println("here 2");
+							return o;
 						}
 					}
 				}
 			}
 		} else if (recordID.substring(0, 3).equals("LTR")) {
 			Teacher t;
+			String o = new String();
 			for (int i = 65; i < 91; i++) {
 				String key = Character.toString((char) i);
 				ArrayList<Object> array = srtrRecords.get(key);
@@ -497,83 +431,15 @@ class CenterServerLVL implements Center {
 					if (array.get(j) instanceof Teacher) {
 						t = (Teacher) array.get(j);
 						if (t.getId().equals(recordID)) {
-
-							if (remoteCenterServerName.equals("DDO")) {
-								logger.info(managerID + "| Using transferRecord method.");
-								DatagramSocket socket = null;
-								String responseMsg = new String();
-								try {
-									logger.info(managerID
-											+ "| Creating UDP connection with DDO server to transfer record.");
-									socket = new DatagramSocket();
-									ByteArrayOutputStream out = new ByteArrayOutputStream();
-									ObjectOutputStream os = new ObjectOutputStream(out);
-									os.writeObject(t);
-									byte[] message = out.toByteArray();
-									InetAddress host = InetAddress.getByName("localhost");
-									DatagramPacket request = new DatagramPacket(message, message.length, host, 1112);
-									socket.send(request);
-									logger.info(managerID + "| Sent request to DDO server - localhost:1112");
-									byte[] buffer = new byte[10];
-									DatagramPacket reply = new DatagramPacket(buffer, buffer.length);
-									socket.receive(reply);
-									logger.info(managerID + "| Reply from DDO server : " + new String(reply.getData()));
-									responseMsg = new String(reply.getData());
-									socket.close();
-									logger.info(managerID + "| Connection closed with DDO server.");
-								} catch (SocketException e) {
-									logger.error(managerID + "| Error in socket connection | " + e.toString());
-									e.printStackTrace();
-								} catch (UnknownHostException e) {
-									logger.error(managerID + "| Unknownhost exception | " + e.toString());
-									e.printStackTrace();
-								} catch (IOException e) {
-									logger.error(managerID + "| IO exception | " + e.toString());
-									e.printStackTrace();
-								}
-								array.remove(j);
-								return responseMsg;
-							} else if (remoteCenterServerName.equals("MTL")) {
-								logger.info(managerID + "| Using transferRecord method.");
-								DatagramSocket socket = null;
-								String responseMsg = new String();
-								try {
-									logger.info(managerID
-											+ "| Creating UDP connection with MTL server to transfer record.");
-									socket = new DatagramSocket();
-									ByteArrayOutputStream out = new ByteArrayOutputStream();
-									ObjectOutputStream os = new ObjectOutputStream(out);
-									os.writeObject(t);
-									byte[] message = out.toByteArray();
-									InetAddress host = InetAddress.getByName("localhost");
-									DatagramPacket request = new DatagramPacket(message, message.length, host, 2965);
-									socket.send(request);
-									logger.info(managerID + "| Sent request to MTL server - localhost:2965");
-									byte[] buffer = new byte[10];
-									DatagramPacket reply = new DatagramPacket(buffer, buffer.length);
-									socket.receive(reply);
-									logger.info(managerID + "| Reply from MTL server : " + new String(reply.getData()));
-									responseMsg = new String(reply.getData());
-									socket.close();
-									logger.info(managerID + "| Connection closed with MTL server.");
-								} catch (SocketException e) {
-									logger.error(managerID + "| Error in socket connection | " + e.toString());
-									e.printStackTrace();
-								} catch (UnknownHostException e) {
-									logger.error(managerID + "| Unknownhost exception | " + e.toString());
-									e.printStackTrace();
-								} catch (IOException e) {
-									logger.error(managerID + "| IO exception | " + e.toString());
-									e.printStackTrace();
-								}
-								array.remove(j);
-								return responseMsg;
-							}
+							o = t.getFname() + ":" + t.getLname() + ":" + t.getAddress() + ":" + t.getPhone() + ":" + t.getSpecialization() + ":" + t.getLocation() ;
+							array.remove(j);
+							return o;
 						}
 					}
 				}
 			}
 		}
-		return "record not found";
+
+		return "khabar nai";
 	}
 }

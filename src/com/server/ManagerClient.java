@@ -23,6 +23,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.helper.LogHelper;
 import com.users.Manager;
+import com.users.Student;
+import com.users.Teacher;
 
 public class ManagerClient implements Runnable {
 
@@ -229,28 +231,104 @@ public class ManagerClient implements Runnable {
 	 */
 	public static void connect_transfer(String managerID, String id, String server_name) {
 		logger.info("Using transfer record method.");
-		// if (managerID.substring(0, 3).equals("MTL")) {
-		// logger.debug("connected to Montreal server");
-		// if(!centerImplMTL.transferRecord(managerID, id,
-		// server_name).equals("record not found"))
-		// System.out.println("tansfer successful");
-		// else
-		// System.out.println("record not found.");
-		// } else if (!managerID.substring(0, 3).equals("LVL")) {
-		// logger.debug("connected to Laval server");
-		// if(!centerImplLVL.transferRecord(managerID, id,
-		// server_name).equals("record not found"))
-		// System.out.println("tansfer successful");
-		// else
-		// System.out.println("record not found.");
-		// } else {
-		// logger.debug("connected to DDO server");
-		// if(!centerImplDDO.transferRecord(managerID, id,
-		// server_name).equals("record not found"))
-		// System.out.println("tansfer successful");
-		// else
-		// System.out.println("record not found.");
-		// }
+		if (managerID.substring(0, 3).equals("MTL")) {
+			logger.debug("connected to Montreal server");
+			String o = centerImplMTL.transferRecord(managerID, id);
+			if (o != "khabar nai") {
+				String[] params = o.split(":");
+				if (id.substring(0, 3).equals("MSR")) {
+					System.out.println(o);
+					System.out.println(params[0]);
+					if (server_name.equals("LVL")) {
+						centerImplLVL.createSRecord(managerID, params[0], params[1], params[2], params[3], params[4]);
+						logger.info("Student record created successfully.");
+
+					} else {
+						centerImplDDO.createSRecord(managerID, params[0], params[1], params[2], params[3], params[4]);
+						logger.info("Student record created successfully.");
+					}
+				} else {
+					if (server_name.equals("LVL")) {
+						centerImplLVL.createTRecord(managerID, params[0], params[1], params[2], params[3], params[4],
+								params[5]);
+						logger.info("Teacher record created successfully.");
+
+					} else {
+						centerImplDDO.createTRecord(managerID, params[0], params[1], params[2], params[3], params[4],
+								params[5]);
+						logger.info("Teacher record created successfully.");
+					}
+				}
+				System.out.println("transfer successful");
+			} else {
+				System.out.println("record not found.");
+			}
+		} else if (managerID.substring(0, 3).equals("LVL")) {
+			logger.debug("connected to Laval server");
+			String o = centerImplLVL.transferRecord(managerID, id);
+			if (o != "khabar nai") {
+				String[] params = o.split(":");
+				if (id.substring(0, 3).equals("LSR")) {
+					System.out.println(o);
+					System.out.println(params[0]);
+					if (server_name.equals("MTL")) {
+						centerImplMTL.createSRecord(managerID, params[0], params[1], params[2], params[3], params[4]);
+						logger.info("Student record created successfully.");
+
+					} else {
+						centerImplDDO.createSRecord(managerID, params[0], params[1], params[2], params[3], params[4]);
+						logger.info("Student record created successfully.");
+					}
+				} else {
+					if (server_name.equals("MTL")) {
+						centerImplMTL.createTRecord(managerID, params[0], params[1], params[2], params[3], params[4],
+								params[5]);
+						logger.info("Teacher record created successfully.");
+
+					} else {
+						centerImplDDO.createTRecord(managerID, params[0], params[1], params[2], params[3], params[4],
+								params[5]);
+						logger.info("Teacher record created successfully.");
+					}
+				}
+				System.out.println("transfer successful");
+			} else {
+				System.out.println("record not found.");
+			}
+		} else if (managerID.substring(0, 3).equals("DDO")) {
+			logger.debug("connected to DDO server");
+			String o = centerImplDDO.transferRecord(managerID, id);
+			if (o != "khabar nai") {
+				String[] params = o.split(":");
+				if (id.substring(0, 3).equals("DSR")) {
+					System.out.println(o);
+					System.out.println(params[0]);
+					if (server_name.equals("LVL")) {
+						centerImplLVL.createSRecord(managerID, params[0], params[1], params[2], params[3], params[4]);
+						logger.info("Student record created successfully.");
+
+					} else {
+						centerImplMTL.createSRecord(managerID, params[0], params[1], params[2], params[3], params[4]);
+						logger.info("Student record created successfully.");
+					}
+				} else {
+					if (server_name.equals("LVL")) {
+						centerImplLVL.createTRecord(managerID, params[0], params[1], params[2], params[3], params[4],
+								params[5]);
+						logger.info("Teacher record created successfully.");
+
+					} else {
+						centerImplMTL.createTRecord(managerID, params[0], params[1], params[2], params[3], params[4],
+								params[5]);
+						logger.info("Teacher record created successfully.");
+					}
+				}
+				System.out.println("transfer successful");
+			} else {
+				System.out.println("record not found.");
+			}
+		}
+
 	}
 
 	/**
@@ -360,7 +438,7 @@ public class ManagerClient implements Runnable {
 			Service serviceLVL = Service.create(urlLVL, qnameLVL);
 			centerImplLVL = serviceLVL.getPort(Center.class);
 
-			// Binding of LVL WebService
+			// Binding of DDO WebService
 			URL urlDDO = new URL("http://localhost:8080/Service/DDO?wsdl");
 			QName qnameDDO = new QName("http://server.com/", "CenterServerDDOService");
 			Service serviceDDO = Service.create(urlDDO, qnameDDO);
@@ -451,8 +529,8 @@ public class ManagerClient implements Runnable {
 								System.out.println("Field can not be blank");
 							break;
 						case "3":
-							System.out.println(centerImplMTL.getRecordCounts(managerID));
-							// connect_record_count(managerID);
+							// System.out.println(centerImplMTL.getRecordCounts(managerID));
+							connect_record_count(managerID);
 							break;
 						case "4":
 							System.out.println("Enter information to edit : ");
