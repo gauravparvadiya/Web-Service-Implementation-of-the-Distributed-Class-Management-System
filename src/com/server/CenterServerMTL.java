@@ -31,11 +31,10 @@ import com.helper.LogHelper;
 import com.users.Student;
 import com.users.Teacher;
 
+@WebService(endpointInterface = "com.server.Center")
+@SOAPBinding(style = Style.RPC)
+public class CenterServerMTL implements Center {
 
-@WebService(endpointInterface="com.server.Center")
-@SOAPBinding(style=Style.RPC)
-public class CenterServerMTL implements Center{
-	
 	public HashMap<String, ArrayList<Object>> srtrRecords;
 	public ArrayList<Object> srtrMTL, a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z;
 	JsonParser parser;
@@ -84,7 +83,6 @@ public class CenterServerMTL implements Center{
 	/**
 	 * Method to add default records to the hashmap
 	 */
-	//@Override
 	public void addDefaultRecords() {
 		File student = new File("res/student.json");
 		File teacher = new File("res/teacher.json");
@@ -272,8 +270,8 @@ public class CenterServerMTL implements Center{
 	}
 
 	@Override
-	public Boolean createSRecord(String managerID, String fname, String lastName, String courseRegistered, String status,
-			String statusDate) {
+	public Boolean createSRecord(String managerID, String fname, String lastName, String courseRegistered,
+			String status, String statusDate) {
 		int id = Integer.parseInt(lastSRecordId.substring(3, 8));
 		lastSRecordId = "MSR" + "" + ++id;
 		Student s = new Student(fname, lastName, courseRegistered, status, statusDate, lastSRecordId);
@@ -286,7 +284,7 @@ public class CenterServerMTL implements Center{
 
 	@Override
 	public String getRecordCounts(String managerID) {
-		
+
 		int counter = 0;
 		if (srtrRecords.size() > 0) {
 			for (int i = 65; i < 91; i++) {
@@ -294,67 +292,10 @@ public class CenterServerMTL implements Center{
 				ArrayList<Object> array = srtrRecords.get(key);
 				counter += array.size();
 			}
-			return ""+counter;
+			return "" + counter;
 		} else {
 			return "0";
 		}
-		
-//		logger.info(managerID + "| Using getRecordCounts method.");
-//		DatagramSocket socket = null;
-//		String responseMsg = new String();
-//		try {
-//			logger.info(managerID + "| Creating UDP connection with LVL and DDO server to get record counts.");
-//			socket = new DatagramSocket();
-//			byte[] message = "Record Count".getBytes();
-//			InetAddress host = InetAddress.getByName("localhost");
-//			DatagramPacket request = new DatagramPacket(message, message.length, host, 1212);
-//			socket.send(request);
-//			logger.info(managerID + "| Sent request to LVL server - localhost:1212");
-//			byte[] buffer = new byte[10];
-//			DatagramPacket reply = new DatagramPacket(buffer, buffer.length);
-//			socket.receive(reply);
-//			logger.info(managerID + "| Reply from LVL server : " + new String(reply.getData()));
-//			responseMsg = new String(reply.getData());
-//			socket.close();
-//			logger.info(managerID + "| Connection closed with LVL server.");
-//			socket = new DatagramSocket();
-//			request = new DatagramPacket(message, message.length, host, 1111);
-//			socket.send(request);
-//			logger.info(managerID + "| Sent request to DDO server - localhost:1111");
-//			buffer = new byte[10];
-//			reply = new DatagramPacket(buffer, buffer.length);
-//			socket.receive(reply);
-//			logger.info(managerID + "| Reply from DDO server - " + new String(reply.getData()));
-//			responseMsg = responseMsg + ", " + new String(reply.getData()) + ", MTL " + getCount();
-//			socket.close();
-//			logger.info(managerID + "| Connection closed with DDO server.");
-//		} catch (SocketException e) {
-//			logger.error(managerID + "| Error in socket connection | " + e.toString());
-//			e.printStackTrace();
-//		} catch (UnknownHostException e) {
-//			logger.error(managerID + "| Unknownhost exception | " + e.toString());
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			logger.error(managerID + "| IO exception | " + e.toString());
-//			e.printStackTrace();
-//		}
-
-		//return responseMsg;
-	}
-
-	public int getCount() {
-		int counter = 0;
-		if (srtrRecords.size() > 0) {
-			for (int i = 65; i < 91; i++) {
-				String key = Character.toString((char) i);
-				ArrayList<Object> array = srtrRecords.get(key);
-				counter += array.size();
-			}
-			return counter;
-		} else {
-			return 0;
-		}
-
 	}
 
 	@Override
@@ -404,7 +345,7 @@ public class CenterServerMTL implements Center{
 										+ newValue);
 								result = true;
 							}
-							
+
 							return result;
 						} else {
 							result = false;
@@ -438,7 +379,7 @@ public class CenterServerMTL implements Center{
 								result = true;
 
 							}
-							
+
 							return result;
 						} else {
 							System.out.println("hiii");
