@@ -26,7 +26,7 @@ import com.users.Manager;
 import com.users.Student;
 import com.users.Teacher;
 
-public class ManagerClient implements Runnable {
+public class ManagerClient {
 
 	static Center centerImplMTL, centerImplLVL, centerImplDDO;
 	public HashMap<String, ArrayList<Manager>> managerHashMap;
@@ -427,26 +427,24 @@ public class ManagerClient implements Runnable {
 		try {
 
 			// Binding of MTL WebService
-			URL urlMTL = new URL("http://localhost:8080/Service/MTL?wsdl");
+			URL urlMTL = new URL("http://localhost:8081/Service/MTL?wsdl");
 			QName qnameMTL = new QName("http://server.com/", "CenterServerMTLService");
 			Service serviceMTL = Service.create(urlMTL, qnameMTL);
 			centerImplMTL = serviceMTL.getPort(Center.class);
 
 			// Binding of LVL WebService
-			URL urlLVL = new URL("http://localhost:8080/Service/LVL?wsdl");
+			URL urlLVL = new URL("http://localhost:8081/Service/LVL?wsdl");
 			QName qnameLVL = new QName("http://server.com/", "CenterServerLVLService");
 			Service serviceLVL = Service.create(urlLVL, qnameLVL);
 			centerImplLVL = serviceLVL.getPort(Center.class);
 
 			// Binding of DDO WebService
-			URL urlDDO = new URL("http://localhost:8080/Service/DDO?wsdl");
+			URL urlDDO = new URL("http://localhost:8081/Service/DDO?wsdl");
 			QName qnameDDO = new QName("http://server.com/", "CenterServerDDOService");
 			Service serviceDDO = Service.create(urlDDO, qnameDDO);
 			centerImplDDO = serviceDDO.getPort(Center.class);
 
 			ManagerClient managerClient = new ManagerClient();
-			Thread t = new Thread(managerClient);
-			t.start();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 			String managerID;
 			do {
@@ -494,11 +492,23 @@ public class ManagerClient implements Runnable {
 							spec = s.nextLine();
 							System.out.println("Location : ");
 							loc = s.nextLine();
-							if (!firstName.equals("") && !lastName.equals("") && !address.equals("")
+							boolean isNum = true;
+							int size = phone.length();
+							if (size == 10) {
+								for (int i = 0; i < size; i++) {
+									if (!Character.isDigit(phone.charAt(i))) {
+										isNum = false;
+									}
+								}
+							}
+							else{
+								isNum=false;
+							}
+							if (!firstName.equals("") && !lastName.equals("") && !address.equals("") && isNum
 									&& !phone.equals("") && !spec.equals("") && !loc.equals("")) {
 								connect_teacher(managerID, firstName, lastName, address, phone, spec, loc);
 							} else
-								System.out.println("Please enter all values.");
+								System.out.println("Please enter proper values.");
 							break;
 						case "2":
 							logger.info("Starting to create student.");
@@ -529,7 +539,6 @@ public class ManagerClient implements Runnable {
 								System.out.println("Field can not be blank");
 							break;
 						case "3":
-							// System.out.println(centerImplMTL.getRecordCounts(managerID));
 							connect_record_count(managerID);
 							break;
 						case "4":
@@ -554,7 +563,12 @@ public class ManagerClient implements Runnable {
 							id = s.nextLine();
 							System.out.println("Server name : (MTL/LVL/DDO)");
 							server_name = s.nextLine();
-							connect_transfer(managerID, id, server_name);
+							if (id.substring(0, 2).equals("MTR") || id.substring(0, 2).equals("MSR")
+									|| id.substring(0, 2).equals("LTR") || id.substring(0, 2).equals("LSR")
+									|| id.substring(0, 2).equals("DTR") || id.substring(0, 2).equals("DSR")) {
+								connect_transfer(managerID, id, server_name);
+							} else
+								System.out.println("Enter proper ID.");
 							break;
 						case "6":
 							File file = new File("log/" + managerID + ".log");
@@ -577,11 +591,6 @@ public class ManagerClient implements Runnable {
 			System.out.println("ERROR : " + e);
 			e.printStackTrace(System.out);
 		}
-	}
-
-	@Override
-	public void run() {
-
 	}
 
 }

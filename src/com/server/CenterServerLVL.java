@@ -87,7 +87,7 @@ public class CenterServerLVL implements Center {
 			JsonArray array = parser.parse(reader).getAsJsonArray();
 
 			System.out.println("Laval default record called");
-			
+
 			if (array != null) {
 				for (int i = 4; i < 7; i++) {
 					JsonObject object = (JsonObject) array.get(i);
@@ -298,108 +298,112 @@ public class CenterServerLVL implements Center {
 	public Boolean editRecord(String managerID, String recordID, String fieldName, String newValue) {
 		Boolean result = false;
 		logger.info(managerID + "| Using editRecord method. Record ID : " + recordID);
-		if (recordID.substring(0, 3).equals("LSR")) {
-			Student s;
-			for (int i = 65; i < 91; i++) {
-				String key = Character.toString((char) i);
-				ArrayList<Object> array = srtrRecords.get(key);
-				for (int j = 0; j < array.size(); j++) {
-					if (array.get(j) instanceof Student) {
-						s = (Student) array.get(j);
-						if (s.getId().equals(recordID)) {
-							System.out.println("Student found");
-							logger.info(managerID + "| Record id " + recordID + " identified as a student.");
-							result = true;
-							if (fieldName.equals("status")) {
-								if (newValue.equals("active") || newValue.equals("deactive")) {
-									s.setStatus(newValue);
-									logger.info(
-											managerID + "| Record - " + recordID + " status changed to " + newValue);
-									result = true;
-								} else {
-									logger.info(managerID + "| Entered invalid status number.");
-									result = false;
-								}
-							} else if (fieldName.equals("statusDueDate")) {
-								Pattern pattern;
-								Matcher matcher;
-								String DATE_PATTERN = "(0?[1-9]|[12][0-9]|3[01])/(0?[1-9]|1[012])/((19|20)\\d\\d)";
-								pattern = Pattern.compile(DATE_PATTERN);
-								matcher = pattern.matcher(newValue);
-								if (matcher.matches()) {
-									s.setStatusDueDate(newValue);
-									logger.info(managerID + "| Record - " + recordID + " status date changed to "
+		synchronized (this) {
+			if (recordID.substring(0, 3).equals("LSR")) {
+				Student s;
+				for (int i = 65; i < 91; i++) {
+					String key = Character.toString((char) i);
+					ArrayList<Object> array = srtrRecords.get(key);
+					for (int j = 0; j < array.size(); j++) {
+						if (array.get(j) instanceof Student) {
+							s = (Student) array.get(j);
+							if (s.getId().equals(recordID)) {
+								System.out.println("Student found");
+								logger.info(managerID + "| Record id " + recordID + " identified as a student.");
+								result = true;
+								if (fieldName.equals("status")) {
+									if (newValue.equals("active") || newValue.equals("deactive")) {
+										s.setStatus(newValue);
+										logger.info(managerID + "| Record - " + recordID + " status changed to "
+												+ newValue);
+										result = true;
+									} else {
+										logger.info(managerID + "| Entered invalid status number.");
+										result = false;
+									}
+								} else if (fieldName.equals("statusDueDate")) {
+									Pattern pattern;
+									Matcher matcher;
+									String DATE_PATTERN = "(0?[1-9]|[12][0-9]|3[01])/(0?[1-9]|1[012])/((19|20)\\d\\d)";
+									pattern = Pattern.compile(DATE_PATTERN);
+									matcher = pattern.matcher(newValue);
+									if (matcher.matches()) {
+										s.setStatusDueDate(newValue);
+										logger.info(managerID + "| Record - " + recordID + " status date changed to "
+												+ newValue);
+										result = true;
+									} else {
+										logger.info(managerID + "| Entered invalid date.");
+										result = false;
+									}
+								} else if (fieldName.equals("coursesRegistered")) {
+									s.setCoursesRegistered(newValue);
+									logger.info(managerID + "| Record - " + recordID + " registered courses changed to "
 											+ newValue);
 									result = true;
-								} else {
-									logger.info(managerID + "| Entered invalid date.");
-									result = false;
 								}
-							} else if (fieldName.equals("coursesRegistered")) {
-								s.setCoursesRegistered(newValue);
-								logger.info(managerID + "| Record - " + recordID + " registered courses changed to "
-										+ newValue);
-								result = true;
-							}
 
-							return result;
-						} else {
-							result = false;
+								return result;
+							} else {
+								result = false;
+							}
 						}
 					}
 				}
-			}
-		} else if (recordID.substring(0, 3).equals("LTR")) {
-			Teacher t;
-			for (int i = 65; i < 91; i++) {
-				String key = Character.toString((char) i);
-				ArrayList<Object> array = srtrRecords.get(key);
-				for (int j = 0; j < array.size(); j++) {
-					if (array.get(j) instanceof Teacher) {
-						t = (Teacher) array.get(j);
-						if (t.getId().equals(recordID)) {
-							// System.out.println("Teacher found");
-							logger.info(managerID + "| Record id " + recordID + " identified as a teacher.");
-							result = true;
-							if (fieldName.equals("address")) {
-								t.setAddress(newValue);
-								logger.info(managerID + "| Record - " + recordID + " address changed to " + newValue);
+			} else if (recordID.substring(0, 3).equals("LTR")) {
+				Teacher t;
+				for (int i = 65; i < 91; i++) {
+					String key = Character.toString((char) i);
+					ArrayList<Object> array = srtrRecords.get(key);
+					for (int j = 0; j < array.size(); j++) {
+						if (array.get(j) instanceof Teacher) {
+							t = (Teacher) array.get(j);
+							if (t.getId().equals(recordID)) {
+								// System.out.println("Teacher found");
+								logger.info(managerID + "| Record id " + recordID + " identified as a teacher.");
 								result = true;
-							} else if (fieldName.equals("location")) {
-								t.setLocation(newValue);
-								logger.info(managerID + "| Record - " + recordID + " location changed to " + newValue);
-								result = true;
-							} else if (fieldName.equals("phone")) {
-								t.setPhone(newValue);
-								logger.info(
-										managerID + "| Record - " + recordID + " phone number changed to " + newValue);
-								result = true;
+								if (fieldName.equals("address")) {
+									t.setAddress(newValue);
+									logger.info(
+											managerID + "| Record - " + recordID + " address changed to " + newValue);
+									result = true;
+								} else if (fieldName.equals("location")) {
+									t.setLocation(newValue);
+									logger.info(
+											managerID + "| Record - " + recordID + " location changed to " + newValue);
+									result = true;
+								} else if (fieldName.equals("phone")) {
+									t.setPhone(newValue);
+									logger.info(managerID + "| Record - " + recordID + " phone number changed to "
+											+ newValue);
+									result = true;
 
+								}
+								return result;
+							} else {
+								System.out.println("hiii");
+								result = false;
 							}
-							return result;
-						} else {
-							System.out.println("hiii");
-							result = false;
 						}
+
 					}
-
 				}
-			}
 
-		} else {
-			result = false;
-		}
-		if (!result) {
-			logger.info(managerID + "| Record - " + recordID + " not found.");
-			System.out.println("no record found");
-			return result;
-		} else {
-			return result;
+			} else {
+				result = false;
+			}
+			if (!result) {
+				logger.info(managerID + "| Record - " + recordID + " not found.");
+				System.out.println("no record found");
+				return result;
+			} else {
+				return result;
+			}
 		}
 	}
 
 	@Override
-	public String transferRecord(String managerID, String recordID) {
+	public synchronized String transferRecord(String managerID, String recordID) {
 		if (recordID.substring(0, 3).equals("LSR")) {
 			Student s;
 			String o = new String();
@@ -412,7 +416,8 @@ public class CenterServerLVL implements Center {
 					if (array.get(j) instanceof Student) {
 						s = (Student) array.get(j);
 						if (s.getId().equals(recordID)) {
-							o = s.getFname() + ":" + s.getLname() + ":" + s.getCoursesRegistered() + ":" + s.getStatus() + ":" + s.getStatusDueDate();
+							o = s.getFname() + ":" + s.getLname() + ":" + s.getCoursesRegistered() + ":" + s.getStatus()
+									+ ":" + s.getStatusDueDate();
 							System.out.println(o);
 							array.remove(j);
 							System.out.println("here 2");
@@ -431,7 +436,8 @@ public class CenterServerLVL implements Center {
 					if (array.get(j) instanceof Teacher) {
 						t = (Teacher) array.get(j);
 						if (t.getId().equals(recordID)) {
-							o = t.getFname() + ":" + t.getLname() + ":" + t.getAddress() + ":" + t.getPhone() + ":" + t.getSpecialization() + ":" + t.getLocation() ;
+							o = t.getFname() + ":" + t.getLname() + ":" + t.getAddress() + ":" + t.getPhone() + ":"
+									+ t.getSpecialization() + ":" + t.getLocation();
 							array.remove(j);
 							return o;
 						}

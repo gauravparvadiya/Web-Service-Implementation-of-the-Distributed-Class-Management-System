@@ -11,3 +11,22 @@ INFO    2017-07-20 22:34:05,982 [main] com.server.ManagerClient  - Using createT
 INFO    2017-07-20 22:34:06,030 [main] com.server.ManagerClient  - Teacher record created successfully.
 DEBUG   2017-07-20 22:37:24,974 [main] com.server.ManagerClient  - connected to manager client.
 DEBUG   2017-07-20 22:37:40,902 [main] com.server.ManagerClient  - connected to manager client.
+DEBUG   2017-07-21 20:09:11,055 [main] com.server.ManagerClient  - connected to manager client.
+DEBUG   2017-07-21 20:09:50,042 [main] com.server.ManagerClient  - connected to manager client.
+INFO    2017-07-21 20:09:51,917 [main] com.server.ManagerClient  - Starting to create teacher.
+DEBUG   2017-07-21 20:20:08,021 [main] com.server.ManagerClient  - connected to manager client.
+INFO    2017-07-21 20:20:15,299 [main] com.server.ManagerClient  - Starting to create teacher.
+INFO    2017-07-21 20:20:45,343 [main] com.server.ManagerClient  - Using createTRecord method.
+INFO    2017-07-21 20:20:45,633 [main] com.server.ManagerClient  - Teacher record created successfully.
+DEBUG   2017-07-21 20:33:01,762 [main] com.server.ManagerClient  - connected to manager client.
+INFO    2017-07-21 20:33:06,345 [main] com.server.ManagerClient  - Starting to create teacher.
+INFO    2017-07-21 20:33:14,616 [main] com.server.ManagerClient  - Using createTRecord method.
+INFO    2017-07-21 20:33:14,725 [main] com.server.ManagerClient  - Teacher record created successfully.
+DEBUG   2017-07-21 20:34:51,640 [main] com.server.ManagerClient  - connected to manager client.
+INFO    2017-07-21 20:34:54,841 [main] com.server.ManagerClient  - Starting to create teacher.
+INFO    2017-07-21 20:35:02,123 [main] com.server.ManagerClient  - Using createTRecord method.
+INFO    2017-07-21 20:35:02,174 [main] com.server.ManagerClient  - Teacher record created successfully.
+DEBUG   2017-07-21 20:39:14,333 [main] com.server.ManagerClient  - connected to manager client.
+INFO    2017-07-21 20:39:15,505 [main] com.server.ManagerClient  - Starting to create teacher.
+INFO    2017-07-21 20:40:08,003 [main] com.server.ManagerClient  - Starting to create teacher.
+DEBUG   2017-07-21 20:41:28,273 [main] com.server.ManagerClient  - connected to manager client.
