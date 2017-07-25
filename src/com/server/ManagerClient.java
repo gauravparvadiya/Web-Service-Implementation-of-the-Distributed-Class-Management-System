@@ -563,9 +563,9 @@ public class ManagerClient {
 							id = s.nextLine();
 							System.out.println("Server name : (MTL/LVL/DDO)");
 							server_name = s.nextLine();
-							if (id.substring(0, 2).equals("MTR") || id.substring(0, 2).equals("MSR")
-									|| id.substring(0, 2).equals("LTR") || id.substring(0, 2).equals("LSR")
-									|| id.substring(0, 2).equals("DTR") || id.substring(0, 2).equals("DSR")) {
+							if (id.substring(0, 3).equals("MTR") || id.substring(0, 3).equals("MSR")
+									|| id.substring(0, 3).equals("LTR") || id.substring(0, 3).equals("LSR")
+									|| id.substring(0, 3).equals("DTR") || id.substring(0, 3).equals("DSR")) {
 								connect_transfer(managerID, id, server_name);
 							} else
 								System.out.println("Enter proper ID.");
