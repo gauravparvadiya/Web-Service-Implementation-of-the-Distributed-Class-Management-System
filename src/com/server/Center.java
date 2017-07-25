@@ -18,7 +18,7 @@ public interface Center {
 	 * @param location
 	 * @throws RemoteException
 	 */
-	public Boolean createTRecord(String firstName, String lastName, String address, String phone, String specialization,
+	public String createTRecord(String firstName, String lastName, String address, String phone, String specialization,
 			String location, String managerID);
 
 	/**
@@ -31,7 +31,7 @@ public interface Center {
 	 * @param statusDate
 	 * @throws RemoteException
 	 */
-	public Boolean createSRecord(String firstName, String lastName, String courseRegistered, String status,
+	public String createSRecord(String firstName, String lastName, String courseRegistered, String status,
 			String statusDate, String managerID);
 
 	/**
@@ -53,6 +53,6 @@ public interface Center {
 	 */
 	public Boolean editRecord(String recordID, String fieldName, String newValue, String managerID);
 
-	public String transferRecord(String managerID, String recordID, String remoteCenterServerName);
+	public String transferRecord(String managerID, String recordI);
 
 }

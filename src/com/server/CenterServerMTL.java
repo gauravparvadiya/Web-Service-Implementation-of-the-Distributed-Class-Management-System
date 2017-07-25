@@ -1,18 +1,10 @@
 package com.server;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.io.Reader;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Matcher;
@@ -31,11 +23,10 @@ import com.helper.LogHelper;
 import com.users.Student;
 import com.users.Teacher;
 
+@WebService(endpointInterface = "com.server.Center")
+@SOAPBinding(style = Style.RPC)
+public class CenterServerMTL implements Center {
 
-@WebService(endpointInterface="com.server.Center")
-@SOAPBinding(style=Style.RPC)
-public class CenterServerMTL implements Center{
-	
 	public HashMap<String, ArrayList<Object>> srtrRecords;
 	public ArrayList<Object> srtrMTL, a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z;
 	JsonParser parser;
@@ -78,13 +69,13 @@ public class CenterServerMTL implements Center{
 
 		helper = new LogHelper();
 		helper.setupLogFile("log/MTLServer.log");
+		//System.out.println("MTL Called");
 		addDefaultRecords();
 	}
 
 	/**
 	 * Method to add default records to the hashmap
 	 */
-	//@Override
 	public void addDefaultRecords() {
 		File student = new File("res/student.json");
 		File teacher = new File("res/teacher.json");
@@ -108,19 +99,19 @@ public class CenterServerMTL implements Center{
 
 			reader = new BufferedReader(new FileReader(teacher.getAbsolutePath()));
 			array = parser.parse(reader).getAsJsonArray();
-
-			if (array != null) {
-				for (int i = 0; i < 4; i++) {
-					JsonObject object = (JsonObject) array.get(i);
-					Teacher t = new Teacher(object.get("fname").getAsString(), object.get("lname").getAsString(),
-							object.get("address").getAsString(), object.get("phone").getAsString(),
-							object.get("specialization").getAsString(), object.get("location").getAsString(),
-							object.get("id").getAsString());
-					srtrMTL.add(t);
-					lastTRecordId = object.get("id").getAsString();
+			synchronized (this) {
+				if (array != null) {
+					for (int i = 0; i < 4; i++) {
+						JsonObject object = (JsonObject) array.get(i);
+						Teacher t = new Teacher(object.get("fname").getAsString(), object.get("lname").getAsString(),
+								object.get("address").getAsString(), object.get("phone").getAsString(),
+								object.get("specialization").getAsString(), object.get("location").getAsString(),
+								object.get("id").getAsString());
+						srtrMTL.add(t);
+						lastTRecordId = object.get("id").getAsString();
+					}
 				}
 			}
-
 			for (int ij = 0; ij < srtrMTL.size(); ij++) {
 				addToMap(srtrMTL.get(ij));
 			}
@@ -259,7 +250,7 @@ public class CenterServerMTL implements Center{
 	}
 
 	@Override
-	public Boolean createTRecord(String managerID, String fname, String lastName, String address, String phone,
+	public String createTRecord(String managerID, String fname, String lastName, String address, String phone,
 			String specialization, String location) {
 		int id = Integer.parseInt(lastTRecordId.substring(3, 8));
 		lastTRecordId = "MTR" + "" + ++id;
@@ -268,12 +259,12 @@ public class CenterServerMTL implements Center{
 				+ address + ", " + phone + ", " + specialization + ", " + location + "}]");
 		addToMap(t);
 		logger.info(managerID + "| Teacher created successfully with id " + lastTRecordId);
-		return true;
+		return lastTRecordId;
 	}
 
 	@Override
-	public Boolean createSRecord(String managerID, String fname, String lastName, String courseRegistered, String status,
-			String statusDate) {
+	public String createSRecord(String managerID, String fname, String lastName, String courseRegistered,
+			String status, String statusDate) {
 		int id = Integer.parseInt(lastSRecordId.substring(3, 8));
 		lastSRecordId = "MSR" + "" + ++id;
 		Student s = new Student(fname, lastName, courseRegistered, status, statusDate, lastSRecordId);
@@ -281,12 +272,12 @@ public class CenterServerMTL implements Center{
 				+ courseRegistered + ", " + status + ", " + statusDate + "}]");
 		addToMap(s);
 		logger.info(managerID + "| Student created successfully with id " + lastSRecordId);
-		return true;
+		return lastSRecordId;
 	}
 
 	@Override
 	public String getRecordCounts(String managerID) {
-		
+		//System.out.println("MTL count Called");
 		int counter = 0;
 		if (srtrRecords.size() > 0) {
 			for (int i = 65; i < 91; i++) {
@@ -294,264 +285,151 @@ public class CenterServerMTL implements Center{
 				ArrayList<Object> array = srtrRecords.get(key);
 				counter += array.size();
 			}
-			return ""+counter;
+			return "" + counter;
 		} else {
 			return "0";
 		}
-		
-//		logger.info(managerID + "| Using getRecordCounts method.");
-//		DatagramSocket socket = null;
-//		String responseMsg = new String();
-//		try {
-//			logger.info(managerID + "| Creating UDP connection with LVL and DDO server to get record counts.");
-//			socket = new DatagramSocket();
-//			byte[] message = "Record Count".getBytes();
-//			InetAddress host = InetAddress.getByName("localhost");
-//			DatagramPacket request = new DatagramPacket(message, message.length, host, 1212);
-//			socket.send(request);
-//			logger.info(managerID + "| Sent request to LVL server - localhost:1212");
-//			byte[] buffer = new byte[10];
-//			DatagramPacket reply = new DatagramPacket(buffer, buffer.length);
-//			socket.receive(reply);
-//			logger.info(managerID + "| Reply from LVL server : " + new String(reply.getData()));
-//			responseMsg = new String(reply.getData());
-//			socket.close();
-//			logger.info(managerID + "| Connection closed with LVL server.");
-//			socket = new DatagramSocket();
-//			request = new DatagramPacket(message, message.length, host, 1111);
-//			socket.send(request);
-//			logger.info(managerID + "| Sent request to DDO server - localhost:1111");
-//			buffer = new byte[10];
-//			reply = new DatagramPacket(buffer, buffer.length);
-//			socket.receive(reply);
-//			logger.info(managerID + "| Reply from DDO server - " + new String(reply.getData()));
-//			responseMsg = responseMsg + ", " + new String(reply.getData()) + ", MTL " + getCount();
-//			socket.close();
-//			logger.info(managerID + "| Connection closed with DDO server.");
-//		} catch (SocketException e) {
-//			logger.error(managerID + "| Error in socket connection | " + e.toString());
-//			e.printStackTrace();
-//		} catch (UnknownHostException e) {
-//			logger.error(managerID + "| Unknownhost exception | " + e.toString());
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			logger.error(managerID + "| IO exception | " + e.toString());
-//			e.printStackTrace();
-//		}
-
-		//return responseMsg;
-	}
-
-	public int getCount() {
-		int counter = 0;
-		if (srtrRecords.size() > 0) {
-			for (int i = 65; i < 91; i++) {
-				String key = Character.toString((char) i);
-				ArrayList<Object> array = srtrRecords.get(key);
-				counter += array.size();
-			}
-			return counter;
-		} else {
-			return 0;
-		}
-
 	}
 
 	@Override
 	public Boolean editRecord(String managerID, String recordID, String fieldName, String newValue) {
 		Boolean result = false;
 		logger.info(managerID + "| Using editRecord method. Record ID : " + recordID);
-		if (recordID.substring(0, 3).equals("MSR")) {
-			Student s;
-			for (int i = 65; i < 91; i++) {
-				String key = Character.toString((char) i);
-				ArrayList<Object> array = srtrRecords.get(key);
-				for (int j = 0; j < array.size(); j++) {
-					if (array.get(j) instanceof Student) {
-						s = (Student) array.get(j);
-						if (s.getId().equals(recordID)) {
-							System.out.println("Student found");
-							logger.info(managerID + "| Record id " + recordID + " identified as a student.");
-							result = true;
-							if (fieldName.equals("status")) {
-								if (newValue.equals("active") || newValue.equals("deactive")) {
-									s.setStatus(newValue);
-									logger.info(
-											managerID + "| Record - " + recordID + " status changed to " + newValue);
-									result = true;
-								} else {
-									logger.info(managerID + "| Entered invalid status number.");
-									result = false;
-								}
-							} else if (fieldName.equals("statusDueDate")) {
-								Pattern pattern;
-								Matcher matcher;
-								String DATE_PATTERN = "(0?[1-9]|[12][0-9]|3[01])/(0?[1-9]|1[012])/((19|20)\\d\\d)";
-								pattern = Pattern.compile(DATE_PATTERN);
-								matcher = pattern.matcher(newValue);
-								if (matcher.matches()) {
-									s.setStatusDueDate(newValue);
-									logger.info(managerID + "| Record - " + recordID + " status date changed to "
+		synchronized (this) {
+			if (recordID.substring(0, 3).equals("MSR")) {
+				Student s;
+				for (int i = 65; i < 91; i++) {
+					String key = Character.toString((char) i);
+					ArrayList<Object> array = srtrRecords.get(key);
+					for (int j = 0; j < array.size(); j++) {
+						if (array.get(j) instanceof Student) {
+							s = (Student) array.get(j);
+							if (s.getId().equals(recordID)) {
+								//System.out.println("Student found");
+								logger.info(managerID + "| Record id " + recordID + " identified as a student.");
+								result = true;
+								if (fieldName.equals("status")) {
+									if (newValue.equals("active") || newValue.equals("deactive")) {
+										s.setStatus(newValue);
+										logger.info(managerID + "| Record - " + recordID + " status changed to "
+												+ newValue);
+										result = true;
+									} else {
+										logger.info(managerID + "| Entered invalid status number.");
+										result = false;
+									}
+								} else if (fieldName.equals("statusDueDate")) {
+									Pattern pattern;
+									Matcher matcher;
+									String DATE_PATTERN = "(0?[1-9]|[12][0-9]|3[01])/(0?[1-9]|1[012])/((19|20)\\d\\d)";
+									pattern = Pattern.compile(DATE_PATTERN);
+									matcher = pattern.matcher(newValue);
+									if (matcher.matches()) {
+										s.setStatusDueDate(newValue);
+										logger.info(managerID + "| Record - " + recordID + " status date changed to "
+												+ newValue);
+										result = true;
+									} else {
+										logger.info(managerID + "| Entered invalid date.");
+										result = false;
+									}
+								} else if (fieldName.equals("coursesRegistered")) {
+									s.setCoursesRegistered(newValue);
+									logger.info(managerID + "| Record - " + recordID + " registered courses changed to "
 											+ newValue);
 									result = true;
-								} else {
-									logger.info(managerID + "| Entered invalid date.");
-									result = false;
 								}
-							} else if (fieldName.equals("coursesRegistered")) {
-								s.setCoursesRegistered(newValue);
-								logger.info(managerID + "| Record - " + recordID + " registered courses changed to "
-										+ newValue);
-								result = true;
+
+								return result;
+							} else {
+								result = false;
 							}
-							
-							return result;
-						} else {
-							result = false;
 						}
 					}
 				}
-			}
-		} else if (recordID.substring(0, 3).equals("MTR")) {
-			Teacher t;
-			for (int i = 65; i < 91; i++) {
-				String key = Character.toString((char) i);
-				ArrayList<Object> array = srtrRecords.get(key);
-				for (int j = 0; j < array.size(); j++) {
-					if (array.get(j) instanceof Teacher) {
-						t = (Teacher) array.get(j);
-						if (t.getId().equals(recordID)) {
-							logger.info(managerID + "| Record id " + recordID + " identified as a teacher.");
-							result = true;
-							if (fieldName.equals("address")) {
-								t.setAddress(newValue);
-								logger.info(managerID + "| Record - " + recordID + " address changed to " + newValue);
+			} else if (recordID.substring(0, 3).equals("MTR")) {
+				Teacher t;
+				for (int i = 65; i < 91; i++) {
+					String key = Character.toString((char) i);
+					ArrayList<Object> array = srtrRecords.get(key);
+					for (int j = 0; j < array.size(); j++) {
+						if (array.get(j) instanceof Teacher) {
+							t = (Teacher) array.get(j);
+							if (t.getId().equals(recordID)) {
+								logger.info(managerID + "| Record id " + recordID + " identified as a teacher.");
 								result = true;
-							} else if (fieldName.equals("location")) {
-								t.setLocation(newValue);
-								logger.info(managerID + "| Record - " + recordID + " location changed to " + newValue);
-								result = true;
-							} else if (fieldName.equals("phone")) {
-								t.setPhone(newValue);
-								logger.info(
-										managerID + "| Record - " + recordID + " phone number changed to " + newValue);
-								result = true;
+								if (fieldName.equals("address")) {
+									t.setAddress(newValue);
+									logger.info(
+											managerID + "| Record - " + recordID + " address changed to " + newValue);
+									result = true;
+								} else if (fieldName.equals("location")) {
+									t.setLocation(newValue);
+									logger.info(
+											managerID + "| Record - " + recordID + " location changed to " + newValue);
+									result = true;
+								} else if (fieldName.equals("phone")) {
+									t.setPhone(newValue);
+									logger.info(managerID + "| Record - " + recordID + " phone number changed to "
+											+ newValue);
+									result = true;
 
+								}
+
+								return result;
+							} else {
+								//System.out.println("hiii");
+								result = false;
 							}
-							
-							return result;
-						} else {
-							System.out.println("hiii");
-							result = false;
 						}
+
 					}
-
 				}
-			}
 
-		} else {
-			result = false;
-		}
-		if (!result) {
-			logger.info(managerID + "| Record - " + recordID + " not found.");
-			System.out.println("no record found");
-			return result;
-		} else {
-			return result;
+			} else {
+				result = false;
+			}
+			if (!result) {
+				logger.info(managerID + "| Record - " + recordID + " not found.");
+				System.out.println("no record found");
+				return result;
+			} else {
+				return result;
+			}
 		}
 	}
 
 	@Override
-	public String transferRecord(String managerID, String recordID, String remoteCenterServerName) {
+	public synchronized String transferRecord(String managerID, String recordID) {
 
 		if (recordID.substring(0, 3).equals("MSR")) {
 			Student s;
+			String o = new String();
+			o = null;
 			for (int i = 65; i < 91; i++) {
 				String key = Character.toString((char) i);
 				ArrayList<Object> array = srtrRecords.get(key);
-				System.out.println(array.size());
+				//System.out.println("Hello " + array.size());
 				for (int j = 0; j < array.size(); j++) {
 					if (array.get(j) instanceof Student) {
 						s = (Student) array.get(j);
 						if (s.getId().equals(recordID)) {
-							if (remoteCenterServerName.equals("LVL")) {
-								logger.info(managerID + "| Using transferRecord method.");
-								DatagramSocket socket = null;
-								String responseMsg = new String();
-								try {
-									logger.info(managerID
-											+ "| Creating UDP connection with LVL server to transfer record.");
-									socket = new DatagramSocket();
-									ByteArrayOutputStream out = new ByteArrayOutputStream();
-									ObjectOutputStream os = new ObjectOutputStream(out);
-									os.writeObject((Object) s);
-									byte[] message = out.toByteArray();
-									InetAddress host = InetAddress.getByName("localhost");
-									DatagramPacket request = new DatagramPacket(message, message.length, host, 1213);
-									socket.send(request);
-									logger.info(managerID + "| Sent request to LVL server - localhost:1213");
-									byte[] buffer = new byte[10];
-									DatagramPacket reply = new DatagramPacket(buffer, buffer.length);
-									socket.receive(reply);
-									logger.info(managerID + "| Reply from LVL server : " + new String(reply.getData()));
-									responseMsg = new String(reply.getData());
-									System.out.println(responseMsg);
-									socket.close();
-									logger.info(managerID + "| Connection closed with LVL server.");
-								} catch (SocketException e) {
-									logger.error(managerID + "| Error in socket connection | " + e.toString());
-									e.printStackTrace();
-								} catch (UnknownHostException e) {
-									logger.error(managerID + "| Unknownhost exception | " + e.toString());
-									e.printStackTrace();
-								} catch (IOException e) {
-									logger.error(managerID + "| IO exception | " + e.toString());
-									e.printStackTrace();
-								}
-								array.remove(j);
-								return responseMsg;
-							} else if (remoteCenterServerName.equals("DDO")) {
-								logger.info(managerID + "| Using transferRecord method.");
-								DatagramSocket socket = null;
-								String responseMsg = new String();
-								try {
-									logger.info(managerID
-											+ "| Creating UDP connection with DDO server to transfer record.");
-									socket = new DatagramSocket();
-									ByteArrayOutputStream out = new ByteArrayOutputStream();
-									ObjectOutputStream os = new ObjectOutputStream(out);
-									os.writeObject(s);
-									byte[] message = out.toByteArray();
-									InetAddress host = InetAddress.getByName("localhost");
-									DatagramPacket request = new DatagramPacket(message, message.length, host, 1112);
-									socket.send(request);
-									logger.info(managerID + "| Sent request to DDO server - localhost:1112");
-									byte[] buffer = new byte[10];
-									DatagramPacket reply = new DatagramPacket(buffer, buffer.length);
-									socket.receive(reply);
-									logger.info(managerID + "| Reply from DDO server : " + new String(reply.getData()));
-									responseMsg = new String(reply.getData());
-									socket.close();
-									logger.info(managerID + "| Connection closed with DDO server.");
-								} catch (SocketException e) {
-									logger.error(managerID + "| Error in socket connection | " + e.toString());
-									e.printStackTrace();
-								} catch (UnknownHostException e) {
-									logger.error(managerID + "| Unknownhost exception | " + e.toString());
-									e.printStackTrace();
-								} catch (IOException e) {
-									logger.error(managerID + "| IO exception | " + e.toString());
-									e.printStackTrace();
-								}
-								array.remove(j);
-								return responseMsg;
-							}
+							o = s.getFname() + ":" + s.getLname() + ":" + s.getCoursesRegistered() + ":" + s.getStatus()
+									+ ":" + s.getStatusDueDate();
+							//System.out.println(o);
+							array.remove(j);
+							logger.info(managerID + "| transferRecord method | Student information transfered from MTL - [{" + s.getFname() + ", " + s.getLname() + ", "
+									+ s.getCoursesRegistered() + ", " + s.getStatus() + ", " + s.getStatusDueDate() +  "}]");
+							//System.out.println("here 2");
+							return o;
 						}
 					}
 				}
 			}
+
 		} else if (recordID.substring(0, 3).equals("MTR")) {
 			Teacher t;
+			String o = new String();
 			for (int i = 65; i < 91; i++) {
 				String key = Character.toString((char) i);
 				ArrayList<Object> array = srtrRecords.get(key);
@@ -559,83 +437,18 @@ public class CenterServerMTL implements Center{
 					if (array.get(j) instanceof Teacher) {
 						t = (Teacher) array.get(j);
 						if (t.getId().equals(recordID)) {
-
-							if (remoteCenterServerName.equals("LVL")) {
-								logger.info(managerID + "| Using transferRecord method.");
-								DatagramSocket socket = null;
-								String responseMsg = new String();
-								try {
-									logger.info(managerID
-											+ "| Creating UDP connection with LVL server to transfer record.");
-									socket = new DatagramSocket();
-									ByteArrayOutputStream out = new ByteArrayOutputStream();
-									ObjectOutputStream os = new ObjectOutputStream(out);
-									os.writeObject(t);
-									byte[] message = out.toByteArray();
-									InetAddress host = InetAddress.getByName("localhost");
-									DatagramPacket request = new DatagramPacket(message, message.length, host, 1213);
-									socket.send(request);
-									logger.info(managerID + "| Sent request to LVL server - localhost:1213");
-									byte[] buffer = new byte[10];
-									DatagramPacket reply = new DatagramPacket(buffer, buffer.length);
-									socket.receive(reply);
-									logger.info(managerID + "| Reply from LVL server : " + new String(reply.getData()));
-									responseMsg = new String(reply.getData());
-									socket.close();
-									logger.info(managerID + "| Connection closed with LVL server.");
-								} catch (SocketException e) {
-									logger.error(managerID + "| Error in socket connection | " + e.toString());
-									e.printStackTrace();
-								} catch (UnknownHostException e) {
-									logger.error(managerID + "| Unknownhost exception | " + e.toString());
-									e.printStackTrace();
-								} catch (IOException e) {
-									logger.error(managerID + "| IO exception | " + e.toString());
-									e.printStackTrace();
-								}
-								array.remove(j);
-								return responseMsg;
-							} else if (remoteCenterServerName.equals("DDO")) {
-								logger.info(managerID + "| Using transferRecord method.");
-								DatagramSocket socket = null;
-								String responseMsg = new String();
-								try {
-									logger.info(managerID
-											+ "| Creating UDP connection with DDO server to transfer record.");
-									socket = new DatagramSocket();
-									ByteArrayOutputStream out = new ByteArrayOutputStream();
-									ObjectOutputStream os = new ObjectOutputStream(out);
-									os.writeObject(t);
-									byte[] message = out.toByteArray();
-									InetAddress host = InetAddress.getByName("localhost");
-									DatagramPacket request = new DatagramPacket(message, message.length, host, 1112);
-									socket.send(request);
-									logger.info(managerID + "| Sent request to DDO server - localhost:1112");
-									byte[] buffer = new byte[10];
-									DatagramPacket reply = new DatagramPacket(buffer, buffer.length);
-									socket.receive(reply);
-									logger.info(managerID + "| Reply from DDO server : " + new String(reply.getData()));
-									responseMsg = new String(reply.getData());
-									socket.close();
-									logger.info(managerID + "| Connection closed with DDO server.");
-								} catch (SocketException e) {
-									logger.error(managerID + "| Error in socket connection | " + e.toString());
-									e.printStackTrace();
-								} catch (UnknownHostException e) {
-									logger.error(managerID + "| Unknownhost exception | " + e.toString());
-									e.printStackTrace();
-								} catch (IOException e) {
-									logger.error(managerID + "| IO exception | " + e.toString());
-									e.printStackTrace();
-								}
-								array.remove(j);
-								return responseMsg;
-							}
+							o = t.getFname() + ":" + t.getLname() + ":" + t.getAddress() + ":" + t.getPhone() + ":"
+									+ t.getSpecialization() + ":" + t.getLocation();
+							array.remove(j);
+							logger.info(managerID + "| transferRecord method | Teacher information transfered from MTL- [{" + t.getFname() + ", " + t.getLname() + ", "
+									+ t.getAddress() + ", " + t.getPhone() + ", " + t.getSpecialization() + ", " + t.getLocation() + "}]");
+							return o;
 						}
 					}
 				}
 			}
 		}
-		return "record not found";
+
+		return "khabar nai";
 	}
 }

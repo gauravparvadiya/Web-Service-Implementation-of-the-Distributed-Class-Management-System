@@ -1,11 +1,11 @@
 package com.server;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,8 +23,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.helper.LogHelper;
 import com.users.Manager;
+import com.users.Student;
+import com.users.Teacher;
 
-public class ManagerClient implements Runnable {
+public class ManagerClient {
 
 	static Center centerImplMTL, centerImplLVL, centerImplDDO;
 	public HashMap<String, ArrayList<Manager>> managerHashMap;
@@ -32,7 +34,6 @@ public class ManagerClient implements Runnable {
 	JsonParser parser;
 	static Logger logger = Logger.getLogger(ManagerClient.class);
 
-	
 	/**
 	 * Default constructor that reads JSON file and puts data in manager hashmap
 	 * 
@@ -93,31 +94,33 @@ public class ManagerClient implements Runnable {
 			String loc) {
 		logger.info("Using createTRecord method.");
 		if (managerID.substring(0, 3).equals("MTL")) {
-			if (centerImplMTL.createTRecord(managerID, fn, ln, address, ph, spec, loc)) {
+			String r_id=centerImplMTL.createTRecord(managerID, fn, ln, address, ph, spec, loc);
+			if (!r_id.equals("")) {
 				System.out.println("Record created successfully. ");
-				logger.info("Teacher record created successfully.");
+				logger.info("Teacher record with id "+ r_id +"created successfully.");
+			} else {
+				System.out.println("Something went wrong!!! ");
+				logger.error("Server returns error creating teacher record.");
+			}
+		} else if (managerID.substring(0, 3).equals("LVL")) {
+			String r_id=centerImplMTL.createTRecord(managerID, fn, ln, address, ph, spec, loc);
+			if (!r_id.equals("")) {
+				System.out.println("Record created successfully. ");
+				logger.info("Teacher record with id "+ r_id +" created successfully.");
+			} else {
+				System.out.println("Something went wrong!!! ");
+				logger.error("Server returns error creating teacher record.");
+			}
+		} else {
+			String r_id=centerImplMTL.createTRecord(managerID, fn, ln, address, ph, spec, loc);
+			if (!r_id.equals("")) {
+				System.out.println("Record created successfully. ");
+				logger.info("Teacher record with id "+ r_id +" created successfully.");
 			} else {
 				System.out.println("Something went wrong!!! ");
 				logger.error("Server returns error creating teacher record.");
 			}
 		}
-//		} else if (managerID.substring(0, 3).equals("LVL")) {
-//			if (centerImplLVL.createTRecord(managerID, fn, ln, address, ph, spec, loc).equals("hi")) {
-//				System.out.println("Record created successfully. ");
-//				logger.info("Teacher record created successfully.");
-//			} else {
-//				System.out.println("Something went wrong!!! ");
-//				logger.error("Server returns error creating teacher record.");
-//			}
-//		} else {
-//			if (centerImplDDO.createTRecord(managerID, fn, ln, address, ph, spec, loc).equals("hi")) {
-//				System.out.println("Record created successfully. ");
-//				logger.info("Teacher record created successfully.");
-//			} else {
-//				System.out.println("Something went wrong!!! ");
-//				logger.error("Server returns error creating teacher record.");
-//			}
-//		}
 	}
 
 	/**
@@ -133,33 +136,36 @@ public class ManagerClient implements Runnable {
 	 * @throws NotBoundException
 	 */
 	public static void connect_student(String managerID, String fn, String ln, String courses, String status,
-			String statusDate){
+			String statusDate) {
 		logger.info("Using createSRecord method.");
-//		if (managerID.substring(0, 3).equals("MTL")) {
-//			if (centerImplMTL.createSRecord(managerID, fn, ln, courses, status, statusDate).equals("hi")) {
-//				System.out.println("Record created successfully.");
-//				logger.info("Student record created successfully.");
-//			} else {
-//				System.out.println("Something went wrong!!! ");
-//				logger.error("Server returns error creating student record.");
-//			}
-//		} else if (managerID.substring(0, 3).equals("LVL")) {
-//			if (centerImplLVL.createSRecord(managerID, fn, ln, courses, status, statusDate).equals("hi")) {
-//				System.out.println("Record created successfully.");
-//				logger.info("Student record created successfully.");
-//			} else {
-//				System.out.println("Something went wrong!!! ");
-//				logger.error("Server returns error creating student record.");
-//			}
-//		} else {
-//			if (centerImplDDO.createSRecord(managerID, fn, ln, courses, status, statusDate).equals("hi")) {
-//				System.out.println("Record created successfully.");
-//				logger.info("Student record created successfully.");
-//			} else {
-//				System.out.println("Something went wrong!!! ");
-//				logger.error("Server returns error creating student record.");
-//			}
-//		}
+		if (managerID.substring(0, 3).equals("MTL")) {
+			String r_id=centerImplMTL.createSRecord(managerID, fn, ln, courses, status, statusDate);
+			if (!r_id.equals("")) {
+				System.out.println("Record created successfully.");
+				logger.info("Student record created successfully.");
+			} else {
+				System.out.println("Something went wrong!!! ");
+				logger.error("Server returns error creating student record.");
+			}
+		} else if (managerID.substring(0, 3).equals("LVL")) {
+			String r_id=centerImplMTL.createSRecord(managerID, fn, ln, courses, status, statusDate);
+			if (!r_id.equals("")) {
+				System.out.println("Record created successfully.");
+				logger.info("Student record created successfully.");
+			} else {
+				System.out.println("Something went wrong!!! ");
+				logger.error("Server returns error creating student record.");
+			}
+		} else {
+			String r_id=centerImplMTL.createSRecord(managerID, fn, ln, courses, status, statusDate);
+			if (!r_id.equals("")) {
+				System.out.println("Record created successfully.");
+				logger.info("Student record created successfully.");
+			} else {
+				System.out.println("Something went wrong!!! ");
+				logger.error("Server returns error creating student record.");
+			}
+		}
 	}
 
 	/**
@@ -173,28 +179,28 @@ public class ManagerClient implements Runnable {
 	 * @throws NotBoundException
 	 */
 	public static void connect_edit(String managerID, String id, String fieldname, String newvalue) {
-//		if (managerID.substring(0, 3).equals("MTL")) {
-//			logger.debug("connected to Montreal server");
-//			if (centerImplMTL.editRecord(managerID, id, fieldname, newvalue).equals("hi")) {
-//				System.out.println("Record edited successfully.");
-//			} else {
-//				System.out.println("Error.");
-//			}
-//		} else if (managerID.substring(0, 3).equals("LVL")) {
-//			logger.debug("connected to Laval server");
-//			if (centerImplLVL.editRecord(managerID, id, fieldname, newvalue).equals("hi")) {
-//				System.out.println("Record edited successfully.");
-//			} else {
-//				System.out.println("Error.");
-//			}
-//		} else {
-//			logger.debug("connected to DDO server");
-//			if (centerImplDDO.editRecord(managerID, id, fieldname, newvalue).equals("hi")) {
-//				System.out.println("Record edited successfully.");
-//			} else {
-//				System.out.println("Error.");
-//			}
-//		}
+		if (managerID.substring(0, 3).equals("MTL")) {
+			logger.debug("connected to Montreal server");
+			if (centerImplMTL.editRecord(managerID, id, fieldname, newvalue)) {
+				System.out.println("Record edited successfully.");
+			} else {
+				System.out.println("Error.");
+			}
+		} else if (managerID.substring(0, 3).equals("LVL")) {
+			logger.debug("connected to Laval server");
+			if (centerImplLVL.editRecord(managerID, id, fieldname, newvalue)) {
+				System.out.println("Record edited successfully.");
+			} else {
+				System.out.println("Error.");
+			}
+		} else {
+			logger.debug("connected to DDO server");
+			if (centerImplDDO.editRecord(managerID, id, fieldname, newvalue)) {
+				System.out.println("Record edited successfully.");
+			} else {
+				System.out.println("Error.");
+			}
+		}
 		logger.info("Using editRecord method");
 	}
 
@@ -207,19 +213,19 @@ public class ManagerClient implements Runnable {
 	 */
 	public static void connect_record_count(String managerID) {
 		logger.info("Using getRecordCount method.");
-//		if (managerID.substring(0, 3).equals("MTL")) {
-//			logger.debug("connected to Montreal server");
-//			String reply = centerImplMTL.getRecordCounts(managerID);
-//			System.out.println("Count : \n" + reply);
-//		} else if (managerID.substring(0, 3).equals("LVL")) {
-//			logger.debug("connected to Laval server");
-//			String reply = centerImplLVL.getRecordCounts(managerID);
-//			System.out.println("Count : \n" + reply);
-//		} else {
-//			logger.debug("connected to DDO server");
-//			String reply = centerImplDDO.getRecordCounts(managerID);
-//			System.out.println("Count : \n" + reply);
-//		}
+
+		logger.debug("connected to Montreal server");
+		String reply = centerImplMTL.getRecordCounts(managerID);
+		System.out.println("MTL : \n" + reply);
+
+		logger.debug("connected to Laval server");
+		reply = centerImplLVL.getRecordCounts(managerID);
+		System.out.println("LVL : \n" + reply);
+
+		logger.debug("connected to DDO server");
+		reply = centerImplDDO.getRecordCounts(managerID);
+		System.out.println("DDO : \n" + reply);
+
 	}
 
 	/**
@@ -230,25 +236,104 @@ public class ManagerClient implements Runnable {
 	 */
 	public static void connect_transfer(String managerID, String id, String server_name) {
 		logger.info("Using transfer record method.");
-//		if (managerID.substring(0, 3).equals("MTL")) {
-//			logger.debug("connected to Montreal server");
-//			if(!centerImplMTL.transferRecord(managerID, id, server_name).equals("record not found"))
-//				System.out.println("tansfer successful");
-//			else
-//				System.out.println("record not found.");
-//		} else if (!managerID.substring(0, 3).equals("LVL")) {
-//			logger.debug("connected to Laval server");
-//			if(!centerImplLVL.transferRecord(managerID, id, server_name).equals("record not found"))
-//				System.out.println("tansfer successful");
-//			else
-//				System.out.println("record not found.");
-//		} else {
-//			logger.debug("connected to DDO server");
-//			if(!centerImplDDO.transferRecord(managerID, id, server_name).equals("record not found"))
-//				System.out.println("tansfer successful");
-//			else
-//				System.out.println("record not found.");
-//		}
+		if (managerID.substring(0, 3).equals("MTL")) {
+			logger.debug("connected to Montreal server");
+			String o = centerImplMTL.transferRecord(managerID, id);
+			if (o != "khabar nai") {
+				String[] params = o.split(":");
+				if (id.substring(0, 3).equals("MSR")) {
+					System.out.println(o);
+					System.out.println(params[0]);
+					if (server_name.equals("LVL")) {
+						centerImplLVL.createSRecord(managerID, params[0], params[1], params[2], params[3], params[4]);
+						logger.info("Student record tansfered from MTL and created on LVL successfully.");
+
+					} else {
+						centerImplDDO.createSRecord(managerID, params[0], params[1], params[2], params[3], params[4]);
+						logger.info("Student record tansfered from MTL and created on DDO successfully.");
+					}
+				} else {
+					if (server_name.equals("LVL")) {
+						centerImplLVL.createTRecord(managerID, params[0], params[1], params[2], params[3], params[4],
+								params[5]);
+						logger.info("Teacher record tansfered from MTL and created on LVL successfully.");
+
+					} else {
+						centerImplDDO.createTRecord(managerID, params[0], params[1], params[2], params[3], params[4],
+								params[5]);
+						logger.info("Teacher record tansfered from MTL and created on DDO successfully.");
+					}
+				}
+				System.out.println("transfer successful");
+			} else {
+				System.out.println("record not found.");
+			}
+		} else if (managerID.substring(0, 3).equals("LVL")) {
+			logger.debug("connected to Laval server");
+			String o = centerImplLVL.transferRecord(managerID, id);
+			if (o != "khabar nai") {
+				String[] params = o.split(":");
+				if (id.substring(0, 3).equals("LSR")) {
+					System.out.println(o);
+					System.out.println(params[0]);
+					if (server_name.equals("MTL")) {
+						centerImplMTL.createSRecord(managerID, params[0], params[1], params[2], params[3], params[4]);
+						logger.info("Student record tansfered from LVL and created on MTL successfully.");
+
+					} else {
+						centerImplDDO.createSRecord(managerID, params[0], params[1], params[2], params[3], params[4]);
+						logger.info("Student record tansfered from LVL and created on DDO successfully.");
+					}
+				} else {
+					if (server_name.equals("MTL")) {
+						centerImplMTL.createTRecord(managerID, params[0], params[1], params[2], params[3], params[4],
+								params[5]);
+						logger.info("Teacher record tansfered from DDO and created on MTL successfully.");
+
+					} else {
+						centerImplDDO.createTRecord(managerID, params[0], params[1], params[2], params[3], params[4],
+								params[5]);
+						logger.info("Teacher record tansfered from DDO and created on LVL successfully.");
+					}
+				}
+				System.out.println("transfer successful");
+			} else {
+				System.out.println("record not found.");
+			}
+		} else if (managerID.substring(0, 3).equals("DDO")) {
+			logger.debug("connected to DDO server");
+			String o = centerImplDDO.transferRecord(managerID, id);
+			if (o != "khabar nai") {
+				String[] params = o.split(":");
+				if (id.substring(0, 3).equals("DSR")) {
+					System.out.println(o);
+					System.out.println(params[0]);
+					if (server_name.equals("LVL")) {
+						centerImplLVL.createSRecord(managerID, params[0], params[1], params[2], params[3], params[4]);
+						logger.info("Student record created successfully.");
+
+					} else {
+						centerImplMTL.createSRecord(managerID, params[0], params[1], params[2], params[3], params[4]);
+						logger.info("Student record created successfully.");
+					}
+				} else {
+					if (server_name.equals("LVL")) {
+						centerImplLVL.createTRecord(managerID, params[0], params[1], params[2], params[3], params[4],
+								params[5]);
+						logger.info("Teacher record created successfully.");
+
+					} else {
+						centerImplMTL.createTRecord(managerID, params[0], params[1], params[2], params[3], params[4],
+								params[5]);
+						logger.info("Teacher record created successfully.");
+					}
+				}
+				System.out.println("transfer successful");
+			} else {
+				System.out.println("record not found.");
+			}
+		}
+
 	}
 
 	/**
@@ -346,15 +431,25 @@ public class ManagerClient implements Runnable {
 	public static void main(String args[]) {
 		try {
 
-			URL url =  new URL("http://localhost:8080/Service/MTL?wsdl");
-			QName qname = new QName("http://server.com/", "CenterServerMTLService");
-			Service service = Service.create(url, qname);
-			centerImplMTL = service.getPort(Center.class);
-			//centerImplMTL.addDefaultRecords();
-			
+			// Binding of MTL WebService
+			URL urlMTL = new URL("http://localhost:8085/Service/MTL?wsdl");
+			QName qnameMTL = new QName("http://server.com/", "CenterServerMTLService");
+			Service serviceMTL = Service.create(urlMTL, qnameMTL);
+			centerImplMTL = serviceMTL.getPort(Center.class);
+
+			// Binding of LVL WebService
+			URL urlLVL = new URL("http://localhost:8085/Service/LVL?wsdl");
+			QName qnameLVL = new QName("http://server.com/", "CenterServerLVLService");
+			Service serviceLVL = Service.create(urlLVL, qnameLVL);
+			centerImplLVL = serviceLVL.getPort(Center.class);
+
+			// Binding of DDO WebService
+			URL urlDDO = new URL("http://localhost:8085/Service/DDO?wsdl");
+			QName qnameDDO = new QName("http://server.com/", "CenterServerDDOService");
+			Service serviceDDO = Service.create(urlDDO, qnameDDO);
+			centerImplDDO = serviceDDO.getPort(Center.class);
+
 			ManagerClient managerClient = new ManagerClient();
-			Thread t = new Thread(managerClient);
-			t.start();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 			String managerID;
 			do {
@@ -379,8 +474,7 @@ public class ManagerClient implements Runnable {
 
 						Scanner s = new Scanner(System.in);
 						String status;
-						String firstName, lastName, address, phone, spec, loc, id, statusDate, fieldName,
-								server_name;
+						String firstName, lastName, address, phone, spec, loc, id, statusDate, fieldName, server_name;
 						String DATE_PATTERN = "(0?[1-9]|[12][0-9]|3[01])/(0?[1-9]|1[012])/((19|20)\\d\\d)";
 						String courses;
 						String newValue;
@@ -403,11 +497,23 @@ public class ManagerClient implements Runnable {
 							spec = s.nextLine();
 							System.out.println("Location : ");
 							loc = s.nextLine();
-							if (!firstName.equals("") && !lastName.equals("") && !address.equals("")
+							boolean isNum = true;
+							int size = phone.length();
+							if (size == 10) {
+								for (int i = 0; i < size; i++) {
+									if (!Character.isDigit(phone.charAt(i))) {
+										isNum = false;
+									}
+								}
+							}
+							else{
+								isNum=false;
+							}
+							if (!firstName.equals("") && !lastName.equals("") && !address.equals("") && isNum
 									&& !phone.equals("") && !spec.equals("") && !loc.equals("")) {
 								connect_teacher(managerID, firstName, lastName, address, phone, spec, loc);
 							} else
-								System.out.println("Please enter all values.");
+								System.out.println("Please enter proper values.");
 							break;
 						case "2":
 							logger.info("Starting to create student.");
@@ -438,8 +544,7 @@ public class ManagerClient implements Runnable {
 								System.out.println("Field can not be blank");
 							break;
 						case "3":
-							System.out.println(centerImplMTL.getRecordCounts(managerID));
-						//	connect_record_count(managerID);
+							connect_record_count(managerID);
 							break;
 						case "4":
 							System.out.println("Enter information to edit : ");
@@ -463,7 +568,33 @@ public class ManagerClient implements Runnable {
 							id = s.nextLine();
 							System.out.println("Server name : (MTL/LVL/DDO)");
 							server_name = s.nextLine();
-							connect_transfer(managerID, id, server_name);
+							if(managerID.startsWith("MTL")&&(server_name.equals("LVL")||server_name.equals("DDO"))){
+								if (id.substring(0, 3).equals("MTR") || id.substring(0, 3).equals("MSR")
+										|| id.substring(0, 3).equals("LTR") || id.substring(0, 3).equals("LSR")
+										|| id.substring(0, 3).equals("DTR") || id.substring(0, 3).equals("DSR")) {
+									connect_transfer(managerID, id, server_name);
+								} else
+									System.out.println("Enter proper ID.");
+							}
+							else if(managerID.startsWith("LVL")&&(server_name.equals("MTL")||server_name.equals("DDO"))){
+								if (id.substring(0, 3).equals("MTR") || id.substring(0, 3).equals("MSR")
+										|| id.substring(0, 3).equals("LTR") || id.substring(0, 3).equals("LSR")
+										|| id.substring(0, 3).equals("DTR") || id.substring(0, 3).equals("DSR")) {
+									connect_transfer(managerID, id, server_name);
+								} else
+									System.out.println("Enter proper ID.");
+							}
+							else if(managerID.startsWith("DDO")&&(server_name.equals("MTL")||server_name.equals("LVL"))){
+								if (id.substring(0, 3).equals("MTR") || id.substring(0, 3).equals("MSR")
+										|| id.substring(0, 3).equals("LTR") || id.substring(0, 3).equals("LSR")
+										|| id.substring(0, 3).equals("DTR") || id.substring(0, 3).equals("DSR")) {
+									connect_transfer(managerID, id, server_name);
+								} else
+									System.out.println("Enter proper ID.");
+							}
+							else
+								System.out.println("Transfer record is not possible on same server.");
+							
 							break;
 						case "6":
 							File file = new File("log/" + managerID + ".log");
@@ -475,7 +606,7 @@ public class ManagerClient implements Runnable {
 							System.out.println("Invalid selection. Please select from given options.");
 							break;
 						}
-						//s.close();
+						// s.close();
 					} while (!reader.readLine().equals("5"));
 				} else {
 					System.out.println("Manager not found.");
@@ -486,11 +617,6 @@ public class ManagerClient implements Runnable {
 			System.out.println("ERROR : " + e);
 			e.printStackTrace(System.out);
 		}
-	}
-
-	@Override
-	public void run() {
-
 	}
 
 }

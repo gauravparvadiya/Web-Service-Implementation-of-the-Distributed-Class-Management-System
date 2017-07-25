@@ -4,3 +4,23 @@ INFO    2017-07-20 22:34:06,019 [pool-1-thread-1] com.server.CenterServerMTL  - 
 INFO    2017-07-20 22:34:06,021 [pool-1-thread-1] com.server.CenterServerMTL  - MTL0001| Teacher created successfully with id MTR10001
 INFO    2017-07-20 22:34:40,099 [pool-1-thread-1] com.server.CenterServerMTL  - MTL0002| createTRecord method | Teacher information - [{a, a, a, 1234567898, qweqwe, qweqw}]
 INFO    2017-07-20 22:34:40,105 [pool-1-thread-1] com.server.CenterServerMTL  - MTL0002| Teacher created successfully with id MTR10002
+INFO    2017-07-21 20:20:45,602 [pool-1-thread-1] com.server.CenterServerMTL  - MTL0001| createTRecord method | Teacher information - [{3, 3, 3, fgfrtrfgfg, r, r}]
+INFO    2017-07-21 20:20:45,602 [pool-1-thread-1] com.server.CenterServerMTL  - MTL0001| Teacher created successfully with id MTR10005
+INFO    2017-07-21 20:33:14,694 [pool-1-thread-1] com.server.CenterServerMTL  - MTL0001| createTRecord method | Teacher information - [{1, 1, 1, sfa, 2, 2}]
+INFO    2017-07-21 20:33:14,710 [pool-1-thread-1] com.server.CenterServerMTL  - MTL0001| Teacher created successfully with id MTR10005
+INFO    2017-07-21 20:35:02,174 [pool-1-thread-2] com.server.CenterServerMTL  - MTL0001| createTRecord method | Teacher information - [{2, 2, 2, jhgfd, 2, 2}]
+INFO    2017-07-21 20:35:02,174 [pool-1-thread-2] com.server.CenterServerMTL  - MTL0001| Teacher created successfully with id MTR10006
+INFO    2017-07-24 23:21:45,824 [pool-1-thread-1] com.server.CenterServerMTL  - MTL0001| createTRecord method | Teacher information - [{1, 1, 1, 1234567890, 1, 1}]
+INFO    2017-07-24 23:21:45,824 [pool-1-thread-1] com.server.CenterServerMTL  - MTL0001| Teacher created successfully with id MTR10005
+INFO    2017-07-24 23:28:01,244 [pool-1-thread-1] com.server.CenterServerMTL  - MTL0001| transferRecord method | Teacher information transfered from MTL- [{Aaron, Baton, 1650 Maisonneuve Blvd W, Montreal, QC, (438) 924-7741, Machine Learning, Montreal}]
+INFO    2017-07-24 23:28:01,275 [pool-1-thread-1] com.server.CenterServerLVL  - MTL0001| createTRecord method | Teacher information - [{Aaron, Baton, 1650 Maisonneuve Blvd W, Montreal, QC, (438) 924-7741, Machine Learning, Montreal}]
+INFO    2017-07-24 23:28:01,275 [pool-1-thread-1] com.server.CenterServerLVL  - MTL0001| Teacher created successfully with id LTR10004
+INFO    2017-07-24 23:29:50,888 [pool-1-thread-1] com.server.CenterServerMTL  - MTL0001| transferRecord method | Teacher information transfered from MTL- [{Aaron, Baton, 1650 Maisonneuve Blvd W, Montreal, QC, (438) 924-7741, Machine Learning, Montreal}]
+INFO    2017-07-24 23:29:50,920 [pool-1-thread-1] com.server.CenterServerDDO  - MTL0001| createTRecord method | Teacher information - [{Aaron, Baton, 1650 Maisonneuve Blvd W, Montreal, QC, (438) 924-7741, Machine Learning, Montreal}]
+INFO    2017-07-24 23:29:50,920 [pool-1-thread-1] com.server.CenterServerDDO  - MTL0001| Teacher created successfully with id DTR10004
+INFO    2017-07-24 23:30:29,711 [pool-1-thread-1] com.server.CenterServerMTL  - MTL0001| transferRecord method | Teacher information transfered from MTL- [{Abraham, Lincon, 1426 Bishop St, Montreal, QC H3G 2E6, (514) 924-7741, Mathematics, Montreal}]
+INFO    2017-07-24 23:30:29,711 [pool-1-thread-1] com.server.CenterServerLVL  - MTL0001| createTRecord method | Teacher information - [{Abraham, Lincon, 1426 Bishop St, Montreal, QC H3G 2E6, (514) 924-7741, Mathematics, Montreal}]
+INFO    2017-07-24 23:30:29,711 [pool-1-thread-1] com.server.CenterServerLVL  - MTL0001| Teacher created successfully with id LTR10004
+INFO    2017-07-24 23:34:38,901 [pool-1-thread-1] com.server.CenterServerMTL  - MTL0001| transferRecord method | Teacher information transfered from MTL- [{Aaron, Baton, 1650 Maisonneuve Blvd W, Montreal, QC, (438) 924-7741, Machine Learning, Montreal}]
+INFO    2017-07-24 23:34:38,932 [pool-1-thread-1] com.server.CenterServerLVL  - MTL0001| createTRecord method | Teacher information - [{Aaron, Baton, 1650 Maisonneuve Blvd W, Montreal, QC, (438) 924-7741, Machine Learning, Montreal}]
+INFO    2017-07-24 23:34:38,932 [pool-1-thread-1] com.server.CenterServerLVL  - MTL0001| Teacher created successfully with id LTR10004

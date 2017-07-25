@@ -6,7 +6,14 @@ public class Publish {
 
 	public static void main(String[] args) {
 		
-		Endpoint endpointMTL = Endpoint.publish("http://localhost:8080/Service/MTL", new CenterServerMTL());
+		Endpoint endpointMTL = Endpoint.publish("http://localhost:8085/Service/MTL", new CenterServerMTL());
 		System.out.println(endpointMTL.isPublished());
+		
+		
+		Endpoint endpointLVL = Endpoint.publish("http://localhost:8085/Service/LVL", new CenterServerLVL());
+		System.out.println(endpointLVL.isPublished());
+		
+		Endpoint endpointDDO = Endpoint.publish("http://localhost:8085/Service/DDO", new CenterServerDDO());
+		System.out.println(endpointDDO.isPublished());
 	}
 }
