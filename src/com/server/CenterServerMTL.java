@@ -69,7 +69,7 @@ public class CenterServerMTL implements Center {
 
 		helper = new LogHelper();
 		helper.setupLogFile("log/MTLServer.log");
-		System.out.println("MTL Called");
+		//System.out.println("MTL Called");
 		addDefaultRecords();
 	}
 
@@ -277,7 +277,7 @@ public class CenterServerMTL implements Center {
 
 	@Override
 	public String getRecordCounts(String managerID) {
-		System.out.println("MTL count Called");
+		//System.out.println("MTL count Called");
 		int counter = 0;
 		if (srtrRecords.size() > 0) {
 			for (int i = 65; i < 91; i++) {
@@ -305,7 +305,7 @@ public class CenterServerMTL implements Center {
 						if (array.get(j) instanceof Student) {
 							s = (Student) array.get(j);
 							if (s.getId().equals(recordID)) {
-								System.out.println("Student found");
+								//System.out.println("Student found");
 								logger.info(managerID + "| Record id " + recordID + " identified as a student.");
 								result = true;
 								if (fieldName.equals("status")) {
@@ -378,7 +378,7 @@ public class CenterServerMTL implements Center {
 
 								return result;
 							} else {
-								System.out.println("hiii");
+								//System.out.println("hiii");
 								result = false;
 							}
 						}
@@ -409,18 +409,18 @@ public class CenterServerMTL implements Center {
 			for (int i = 65; i < 91; i++) {
 				String key = Character.toString((char) i);
 				ArrayList<Object> array = srtrRecords.get(key);
-				System.out.println("Hello " + array.size());
+				//System.out.println("Hello " + array.size());
 				for (int j = 0; j < array.size(); j++) {
 					if (array.get(j) instanceof Student) {
 						s = (Student) array.get(j);
 						if (s.getId().equals(recordID)) {
 							o = s.getFname() + ":" + s.getLname() + ":" + s.getCoursesRegistered() + ":" + s.getStatus()
 									+ ":" + s.getStatusDueDate();
-							System.out.println(o);
+							//System.out.println(o);
 							array.remove(j);
 							logger.info(managerID + "| transferRecord method | Student information transfered from MTL - [{" + s.getFname() + ", " + s.getLname() + ", "
 									+ s.getCoursesRegistered() + ", " + s.getStatus() + ", " + s.getStatusDueDate() +  "}]");
-							System.out.println("here 2");
+							//System.out.println("here 2");
 							return o;
 						}
 					}

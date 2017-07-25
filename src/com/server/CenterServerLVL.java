@@ -69,7 +69,7 @@ public class CenterServerLVL implements Center {
 
 		helper = new LogHelper();
 		helper.setupLogFile("log/LVLServer.log");
-		System.out.println("LVL Called");
+		//System.out.println("LVL Called");
 		addDefaultRecords();
 	}
 
@@ -86,7 +86,7 @@ public class CenterServerLVL implements Center {
 			JsonParser parser = new JsonParser();
 			JsonArray array = parser.parse(reader).getAsJsonArray();
 
-			System.out.println("Laval default record called");
+			//System.out.println("Laval default record called");
 
 			if (array != null) {
 				for (int i = 4; i < 7; i++) {
@@ -279,7 +279,7 @@ public class CenterServerLVL implements Center {
 
 	@Override
 	public String getRecordCounts(String managerID) {
-		System.out.println("LVL count Called");
+		//System.out.println("LVL count Called");
 		logger.info(managerID + "| Using getRecordCounts method.");
 		int counter = 0;
 		if (srtrRecords.size() > 0) {
@@ -308,7 +308,7 @@ public class CenterServerLVL implements Center {
 						if (array.get(j) instanceof Student) {
 							s = (Student) array.get(j);
 							if (s.getId().equals(recordID)) {
-								System.out.println("Student found");
+								//System.out.println("Student found");
 								logger.info(managerID + "| Record id " + recordID + " identified as a student.");
 								result = true;
 								if (fieldName.equals("status")) {
@@ -381,7 +381,7 @@ public class CenterServerLVL implements Center {
 								}
 								return result;
 							} else {
-								System.out.println("hiii");
+								//System.out.println("hiii");
 								result = false;
 							}
 						}
@@ -411,16 +411,16 @@ public class CenterServerLVL implements Center {
 			for (int i = 65; i < 91; i++) {
 				String key = Character.toString((char) i);
 				ArrayList<Object> array = srtrRecords.get(key);
-				System.out.println("Hello " + array.size());
+				//System.out.println("Hello " + array.size());
 				for (int j = 0; j < array.size(); j++) {
 					if (array.get(j) instanceof Student) {
 						s = (Student) array.get(j);
 						if (s.getId().equals(recordID)) {
 							o = s.getFname() + ":" + s.getLname() + ":" + s.getCoursesRegistered() + ":" + s.getStatus()
 									+ ":" + s.getStatusDueDate();
-							System.out.println(o);
+							//System.out.println(o);
 							array.remove(j);
-							System.out.println("here 2");
+							//System.out.println("here 2");
 							return o;
 						}
 					}
