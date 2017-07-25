@@ -30,3 +30,25 @@ DEBUG   2017-07-21 20:39:14,333 [main] com.server.ManagerClient  - connected to 
 INFO    2017-07-21 20:39:15,505 [main] com.server.ManagerClient  - Starting to create teacher.
 INFO    2017-07-21 20:40:08,003 [main] com.server.ManagerClient  - Starting to create teacher.
 DEBUG   2017-07-21 20:41:28,273 [main] com.server.ManagerClient  - connected to manager client.
+DEBUG   2017-07-24 23:21:36,857 [main] com.server.ManagerClient  - connected to manager client.
+INFO    2017-07-24 23:21:38,239 [main] com.server.ManagerClient  - Starting to create teacher.
+INFO    2017-07-24 23:21:45,527 [main] com.server.ManagerClient  - Using createTRecord method.
+INFO    2017-07-24 23:21:45,840 [main] com.server.ManagerClient  - Teacher record with id MTR10005created successfully.
+DEBUG   2017-07-24 23:27:26,331 [main] com.server.ManagerClient  - connected to manager client.
+INFO    2017-07-24 23:28:01,151 [main] com.server.ManagerClient  - Using transfer record method.
+DEBUG   2017-07-24 23:28:01,165 [main] com.server.ManagerClient  - connected to Montreal server
+INFO    2017-07-24 23:28:01,275 [main] com.server.ManagerClient  - Teacher record tansfered from MTL and created on LVL successfully.
+DEBUG   2017-07-24 23:29:16,742 [main] com.server.ManagerClient  - connected to manager client.
+INFO    2017-07-24 23:29:26,669 [main] com.server.ManagerClient  - Using transfer record method.
+DEBUG   2017-07-24 23:29:26,669 [main] com.server.ManagerClient  - connected to Montreal server
+DEBUG   2017-07-24 23:29:41,521 [main] com.server.ManagerClient  - connected to manager client.
+INFO    2017-07-24 23:29:50,841 [main] com.server.ManagerClient  - Using transfer record method.
+DEBUG   2017-07-24 23:29:50,841 [main] com.server.ManagerClient  - connected to Montreal server
+INFO    2017-07-24 23:29:50,920 [main] com.server.ManagerClient  - Teacher record tansfered from MTL and created on DDO successfully.
+INFO    2017-07-24 23:30:29,706 [main] com.server.ManagerClient  - Using transfer record method.
+DEBUG   2017-07-24 23:30:29,709 [main] com.server.ManagerClient  - connected to Montreal server
+INFO    2017-07-24 23:30:29,726 [main] com.server.ManagerClient  - Teacher record tansfered from MTL and created on LVL successfully.
+DEBUG   2017-07-24 23:34:14,836 [main] com.server.ManagerClient  - connected to manager client.
+INFO    2017-07-24 23:34:38,823 [main] com.server.ManagerClient  - Using transfer record method.
+DEBUG   2017-07-24 23:34:38,823 [main] com.server.ManagerClient  - connected to Montreal server
+INFO    2017-07-24 23:34:38,932 [main] com.server.ManagerClient  - Teacher record tansfered from MTL and created on LVL successfully.

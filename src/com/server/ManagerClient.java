@@ -94,26 +94,28 @@ public class ManagerClient {
 			String loc) {
 		logger.info("Using createTRecord method.");
 		if (managerID.substring(0, 3).equals("MTL")) {
-			if (centerImplMTL.createTRecord(managerID, fn, ln, address, ph, spec, loc)) {
+			String r_id=centerImplMTL.createTRecord(managerID, fn, ln, address, ph, spec, loc);
+			if (!r_id.equals("")) {
 				System.out.println("Record created successfully. ");
-				logger.info("Teacher record created successfully.");
-				;
+				logger.info("Teacher record with id "+ r_id +"created successfully.");
 			} else {
 				System.out.println("Something went wrong!!! ");
 				logger.error("Server returns error creating teacher record.");
 			}
 		} else if (managerID.substring(0, 3).equals("LVL")) {
-			if (centerImplLVL.createTRecord(managerID, fn, ln, address, ph, spec, loc)) {
+			String r_id=centerImplMTL.createTRecord(managerID, fn, ln, address, ph, spec, loc);
+			if (!r_id.equals("")) {
 				System.out.println("Record created successfully. ");
-				logger.info("Teacher record created successfully.");
+				logger.info("Teacher record with id "+ r_id +" created successfully.");
 			} else {
 				System.out.println("Something went wrong!!! ");
 				logger.error("Server returns error creating teacher record.");
 			}
 		} else {
-			if (centerImplDDO.createTRecord(managerID, fn, ln, address, ph, spec, loc)) {
+			String r_id=centerImplMTL.createTRecord(managerID, fn, ln, address, ph, spec, loc);
+			if (!r_id.equals("")) {
 				System.out.println("Record created successfully. ");
-				logger.info("Teacher record created successfully.");
+				logger.info("Teacher record with id "+ r_id +" created successfully.");
 			} else {
 				System.out.println("Something went wrong!!! ");
 				logger.error("Server returns error creating teacher record.");
@@ -137,7 +139,8 @@ public class ManagerClient {
 			String statusDate) {
 		logger.info("Using createSRecord method.");
 		if (managerID.substring(0, 3).equals("MTL")) {
-			if (centerImplMTL.createSRecord(managerID, fn, ln, courses, status, statusDate)) {
+			String r_id=centerImplMTL.createSRecord(managerID, fn, ln, courses, status, statusDate);
+			if (!r_id.equals("")) {
 				System.out.println("Record created successfully.");
 				logger.info("Student record created successfully.");
 			} else {
@@ -145,7 +148,8 @@ public class ManagerClient {
 				logger.error("Server returns error creating student record.");
 			}
 		} else if (managerID.substring(0, 3).equals("LVL")) {
-			if (centerImplLVL.createSRecord(managerID, fn, ln, courses, status, statusDate)) {
+			String r_id=centerImplMTL.createSRecord(managerID, fn, ln, courses, status, statusDate);
+			if (!r_id.equals("")) {
 				System.out.println("Record created successfully.");
 				logger.info("Student record created successfully.");
 			} else {
@@ -153,7 +157,8 @@ public class ManagerClient {
 				logger.error("Server returns error creating student record.");
 			}
 		} else {
-			if (centerImplDDO.createSRecord(managerID, fn, ln, courses, status, statusDate)) {
+			String r_id=centerImplMTL.createSRecord(managerID, fn, ln, courses, status, statusDate);
+			if (!r_id.equals("")) {
 				System.out.println("Record created successfully.");
 				logger.info("Student record created successfully.");
 			} else {
@@ -427,19 +432,19 @@ public class ManagerClient {
 		try {
 
 			// Binding of MTL WebService
-			URL urlMTL = new URL("http://localhost:8081/Service/MTL?wsdl");
+			URL urlMTL = new URL("http://localhost:8085/Service/MTL?wsdl");
 			QName qnameMTL = new QName("http://server.com/", "CenterServerMTLService");
 			Service serviceMTL = Service.create(urlMTL, qnameMTL);
 			centerImplMTL = serviceMTL.getPort(Center.class);
 
 			// Binding of LVL WebService
-			URL urlLVL = new URL("http://localhost:8081/Service/LVL?wsdl");
+			URL urlLVL = new URL("http://localhost:8085/Service/LVL?wsdl");
 			QName qnameLVL = new QName("http://server.com/", "CenterServerLVLService");
 			Service serviceLVL = Service.create(urlLVL, qnameLVL);
 			centerImplLVL = serviceLVL.getPort(Center.class);
 
 			// Binding of DDO WebService
-			URL urlDDO = new URL("http://localhost:8081/Service/DDO?wsdl");
+			URL urlDDO = new URL("http://localhost:8085/Service/DDO?wsdl");
 			QName qnameDDO = new QName("http://server.com/", "CenterServerDDOService");
 			Service serviceDDO = Service.create(urlDDO, qnameDDO);
 			centerImplDDO = serviceDDO.getPort(Center.class);
@@ -563,12 +568,33 @@ public class ManagerClient {
 							id = s.nextLine();
 							System.out.println("Server name : (MTL/LVL/DDO)");
 							server_name = s.nextLine();
-							if (id.substring(0, 3).equals("MTR") || id.substring(0, 3).equals("MSR")
-									|| id.substring(0, 3).equals("LTR") || id.substring(0, 3).equals("LSR")
-									|| id.substring(0, 3).equals("DTR") || id.substring(0, 3).equals("DSR")) {
-								connect_transfer(managerID, id, server_name);
-							} else
-								System.out.println("Enter proper ID.");
+							if(managerID.startsWith("MTL")&&(server_name.equals("LVL")||server_name.equals("DDO"))){
+								if (id.substring(0, 3).equals("MTR") || id.substring(0, 3).equals("MSR")
+										|| id.substring(0, 3).equals("LTR") || id.substring(0, 3).equals("LSR")
+										|| id.substring(0, 3).equals("DTR") || id.substring(0, 3).equals("DSR")) {
+									connect_transfer(managerID, id, server_name);
+								} else
+									System.out.println("Enter proper ID.");
+							}
+							else if(managerID.startsWith("LVL")&&(server_name.equals("MTL")||server_name.equals("DDO"))){
+								if (id.substring(0, 3).equals("MTR") || id.substring(0, 3).equals("MSR")
+										|| id.substring(0, 3).equals("LTR") || id.substring(0, 3).equals("LSR")
+										|| id.substring(0, 3).equals("DTR") || id.substring(0, 3).equals("DSR")) {
+									connect_transfer(managerID, id, server_name);
+								} else
+									System.out.println("Enter proper ID.");
+							}
+							else if(managerID.startsWith("DDO")&&(server_name.equals("MTL")||server_name.equals("LVL"))){
+								if (id.substring(0, 3).equals("MTR") || id.substring(0, 3).equals("MSR")
+										|| id.substring(0, 3).equals("LTR") || id.substring(0, 3).equals("LSR")
+										|| id.substring(0, 3).equals("DTR") || id.substring(0, 3).equals("DSR")) {
+									connect_transfer(managerID, id, server_name);
+								} else
+									System.out.println("Enter proper ID.");
+							}
+							else
+								System.out.println("Transfer record is not possible on same server.");
+							
 							break;
 						case "6":
 							File file = new File("log/" + managerID + ".log");

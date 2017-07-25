@@ -277,7 +277,7 @@ public class CenterServerDDO implements Center {
 	}
 
 	@Override
-	public Boolean createTRecord(String managerID, String fname, String lastName, String address, String phone,
+	public String createTRecord(String managerID, String fname, String lastName, String address, String phone,
 			String specialization, String location) {
 		int id = Integer.parseInt(lastTRecordId.substring(3, 8));
 		lastTRecordId = "DTR" + "" + ++id;
@@ -286,11 +286,11 @@ public class CenterServerDDO implements Center {
 				+ address + ", " + phone + ", " + specialization + ", " + location + "}]");
 		addToMap(t);
 		logger.info(managerID + "| Teacher created successfully with id " + lastTRecordId);
-		return true;
+		return lastTRecordId;
 	}
 
 	@Override
-	public Boolean createSRecord(String managerID, String fname, String lastName, String courseRegistered,
+	public String createSRecord(String managerID, String fname, String lastName, String courseRegistered,
 			String status, String statusDate) {
 		int id = Integer.parseInt(lastSRecordId.substring(3, 8));
 		lastSRecordId = "DSR" + "" + ++id;
@@ -299,7 +299,7 @@ public class CenterServerDDO implements Center {
 				+ courseRegistered + ", " + status + ", " + statusDate + "}]");
 		addToMap(s);
 		logger.info(managerID + "| Student created successfully with id " + lastSRecordId);
-		return true;
+		return lastSRecordId;
 	}
 
 	@Override
