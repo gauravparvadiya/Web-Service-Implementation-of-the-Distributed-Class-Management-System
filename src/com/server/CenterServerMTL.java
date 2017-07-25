@@ -418,6 +418,8 @@ public class CenterServerMTL implements Center {
 									+ ":" + s.getStatusDueDate();
 							System.out.println(o);
 							array.remove(j);
+							logger.info(managerID + "| transferRecord method | Student information transfered from MTL - [{" + s.getFname() + ", " + s.getLname() + ", "
+									+ s.getCoursesRegistered() + ", " + s.getStatus() + ", " + s.getStatusDueDate() +  "}]");
 							System.out.println("here 2");
 							return o;
 						}
@@ -438,6 +440,8 @@ public class CenterServerMTL implements Center {
 							o = t.getFname() + ":" + t.getLname() + ":" + t.getAddress() + ":" + t.getPhone() + ":"
 									+ t.getSpecialization() + ":" + t.getLocation();
 							array.remove(j);
+							logger.info(managerID + "| transferRecord method | Teacher information transfered from MTL- [{" + t.getFname() + ", " + t.getLname() + ", "
+									+ t.getAddress() + ", " + t.getPhone() + ", " + t.getSpecialization() + ", " + t.getLocation() + "}]");
 							return o;
 						}
 					}

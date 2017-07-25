@@ -241,22 +241,22 @@ public class ManagerClient {
 					System.out.println(params[0]);
 					if (server_name.equals("LVL")) {
 						centerImplLVL.createSRecord(managerID, params[0], params[1], params[2], params[3], params[4]);
-						logger.info("Student record created successfully.");
+						logger.info("Student record tansfered from MTL and created on LVL successfully.");
 
 					} else {
 						centerImplDDO.createSRecord(managerID, params[0], params[1], params[2], params[3], params[4]);
-						logger.info("Student record created successfully.");
+						logger.info("Student record tansfered from MTL and created on DDO successfully.");
 					}
 				} else {
 					if (server_name.equals("LVL")) {
 						centerImplLVL.createTRecord(managerID, params[0], params[1], params[2], params[3], params[4],
 								params[5]);
-						logger.info("Teacher record created successfully.");
+						logger.info("Teacher record tansfered from MTL and created on LVL successfully.");
 
 					} else {
 						centerImplDDO.createTRecord(managerID, params[0], params[1], params[2], params[3], params[4],
 								params[5]);
-						logger.info("Teacher record created successfully.");
+						logger.info("Teacher record tansfered from MTL and created on DDO successfully.");
 					}
 				}
 				System.out.println("transfer successful");
@@ -273,22 +273,22 @@ public class ManagerClient {
 					System.out.println(params[0]);
 					if (server_name.equals("MTL")) {
 						centerImplMTL.createSRecord(managerID, params[0], params[1], params[2], params[3], params[4]);
-						logger.info("Student record created successfully.");
+						logger.info("Student record tansfered from LVL and created on MTL successfully.");
 
 					} else {
 						centerImplDDO.createSRecord(managerID, params[0], params[1], params[2], params[3], params[4]);
-						logger.info("Student record created successfully.");
+						logger.info("Student record tansfered from LVL and created on DDO successfully.");
 					}
 				} else {
 					if (server_name.equals("MTL")) {
 						centerImplMTL.createTRecord(managerID, params[0], params[1], params[2], params[3], params[4],
 								params[5]);
-						logger.info("Teacher record created successfully.");
+						logger.info("Teacher record tansfered from DDO and created on MTL successfully.");
 
 					} else {
 						centerImplDDO.createTRecord(managerID, params[0], params[1], params[2], params[3], params[4],
 								params[5]);
-						logger.info("Teacher record created successfully.");
+						logger.info("Teacher record tansfered from DDO and created on LVL successfully.");
 					}
 				}
 				System.out.println("transfer successful");
